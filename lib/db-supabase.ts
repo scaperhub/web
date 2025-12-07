@@ -1,10 +1,29 @@
-import { supabase } from './supabase';
+import { supabase, supabaseAdmin } from './supabase';
 import { User, Category, Item, Message, Conversation, OTP } from './types';
 
+
+// Check if Supabase is properly configured
+const isSupabaseConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!isSupabaseConfigured) {
+  throw new Error('Supabase is not configured. This module should only be used when USE_SUPABASE is true.');
+}
+
+// Helper to ensure supabase is not null
+function getSupabase() {
+  if (!supabase) throw new Error('Supabase client not initialized');
+  return supabase;
+}
+
+// Helper to ensure supabaseAdmin is not null
+function getSupabaseAdmin() {
+  if (!supabaseAdmin) throw new Error('Supabase admin client not initialized');
+  return supabaseAdmin;
+}
 export const db = {
   users: {
     getAll: async (): Promise<User[]> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('users')
         .select('*')
         .order('createdAt', { ascending: false });
@@ -14,7 +33,7 @@ export const db = {
     },
     
     getByEmail: async (email: string): Promise<User | undefined> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('users')
         .select('*')
         .eq('email', email)
@@ -25,7 +44,7 @@ export const db = {
     },
     
     getById: async (id: string): Promise<User | undefined> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('users')
         .select('*')
         .eq('id', id)
@@ -36,7 +55,7 @@ export const db = {
     },
     
     getByUsername: async (username: string): Promise<User | undefined> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('users')
         .select('*')
         .eq('username', username)
@@ -47,7 +66,7 @@ export const db = {
     },
     
     create: async (user: User): Promise<User> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('users')
         .insert({
           id: user.id,
@@ -76,7 +95,7 @@ export const db = {
     },
     
     update: async (id: string, updates: Partial<User>): Promise<User | null> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('users')
         .update(updates)
         .eq('id', id)
@@ -90,7 +109,7 @@ export const db = {
   
   categories: {
     getAll: async (): Promise<Category[]> => {
-      const { data: categories, error } = await supabase
+      const { data: categories, error } = await getSupabase()
         .from('categories')
         .select('*, subcategories(*)')
         .order('createdAt', { ascending: false });
@@ -113,7 +132,7 @@ export const db = {
     },
     
     getById: async (id: string): Promise<Category | undefined> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('categories')
         .select('*, subcategories(*)')
         .eq('id', id)
@@ -138,7 +157,7 @@ export const db = {
     
     create: async (category: Category): Promise<Category> => {
       // First create category
-      const { data: catData, error: catError } = await supabase
+      const { data: catData, error: catError } = await getSupabase()
         .from('categories')
         .insert({
           id: category.id,
@@ -153,7 +172,7 @@ export const db = {
       
       // Then create subcategories
       if (category.subcategories.length > 0) {
-        const { error: subError } = await supabase
+        const { error: subError } = await getSupabase()
           .from('subcategories')
           .insert(
             category.subcategories.map(sub => ({
@@ -179,7 +198,7 @@ export const db = {
       if (updates.description !== undefined) updateData.description = updates.description;
       
       if (Object.keys(updateData).length > 0) {
-        const { error } = await supabase
+        const { error } = await getSupabase()
           .from('categories')
           .update(updateData)
           .eq('id', id);
@@ -190,11 +209,11 @@ export const db = {
       // Update subcategories if provided
       if (updates.subcategories) {
         // Delete existing subcategories
-        await supabase.from('subcategories').delete().eq('categoryId', id);
+        await getSupabase().from('subcategories').delete().eq('categoryId', id);
         
         // Insert new subcategories
         if (updates.subcategories.length > 0) {
-          const { error } = await supabase
+          const { error } = await getSupabase()
             .from('subcategories')
             .insert(
               updates.subcategories.map(sub => ({
@@ -215,7 +234,7 @@ export const db = {
     },
     
     delete: async (id: string): Promise<boolean> => {
-      const { error } = await supabase
+      const { error } = await getSupabase()
         .from('categories')
         .delete()
         .eq('id', id);
@@ -226,7 +245,7 @@ export const db = {
   
   items: {
     getAll: async (): Promise<Item[]> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('items')
         .select('*')
         .order('createdAt', { ascending: false });
@@ -236,7 +255,7 @@ export const db = {
     },
     
     getById: async (id: string): Promise<Item | undefined> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('items')
         .select('*')
         .eq('id', id)
@@ -247,7 +266,7 @@ export const db = {
     },
     
     getBySeller: async (sellerId: string): Promise<Item[]> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('items')
         .select('*')
         .eq('sellerId', sellerId)
@@ -258,7 +277,7 @@ export const db = {
     },
     
     getByCategory: async (categoryId: string): Promise<Item[]> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('items')
         .select('*')
         .eq('categoryId', categoryId)
@@ -269,7 +288,7 @@ export const db = {
     },
     
     create: async (item: Item): Promise<Item> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('items')
         .insert({
           id: item.id,
@@ -296,7 +315,7 @@ export const db = {
     },
     
     update: async (id: string, updates: Partial<Item>): Promise<Item | null> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('items')
         .update(updates)
         .eq('id', id)
@@ -308,7 +327,7 @@ export const db = {
     },
     
     delete: async (id: string): Promise<boolean> => {
-      const { error } = await supabase
+      const { error } = await getSupabase()
         .from('items')
         .delete()
         .eq('id', id);
@@ -319,7 +338,7 @@ export const db = {
   
   messages: {
     getAll: async (): Promise<Message[]> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('messages')
         .select('*')
         .order('createdAt', { ascending: true });
@@ -329,7 +348,7 @@ export const db = {
     },
     
     getByConversation: async (conversationId: string): Promise<Message[]> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('messages')
         .select('*')
         .eq('conversationId', conversationId)
@@ -340,7 +359,7 @@ export const db = {
     },
     
     create: async (message: Message): Promise<Message> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('messages')
         .insert({
           id: message.id,
@@ -360,7 +379,8 @@ export const db = {
     },
     
     markAsRead: async (conversationId: string, userId: string): Promise<void> => {
-      await supabase
+      const client = getSupabase();
+      await client
         .from('messages')
         .update({ read: true })
         .eq('conversationId', conversationId)
@@ -371,7 +391,7 @@ export const db = {
   
   conversations: {
     getAll: async (): Promise<Conversation[]> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('conversations')
         .select('*')
         .order('updatedAt', { ascending: false });
@@ -381,7 +401,7 @@ export const db = {
     },
     
     getByUser: async (userId: string): Promise<Conversation[]> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('conversations')
         .select('*')
         .or(`buyerId.eq.${userId},sellerId.eq.${userId}`)
@@ -392,7 +412,7 @@ export const db = {
     },
     
     getById: async (id: string): Promise<Conversation | undefined> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('conversations')
         .select('*')
         .eq('id', id)
@@ -403,7 +423,7 @@ export const db = {
     },
     
     getByItemAndBuyer: async (itemId: string, buyerId: string): Promise<Conversation | undefined> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('conversations')
         .select('*')
         .eq('itemId', itemId)
@@ -415,7 +435,7 @@ export const db = {
     },
     
     create: async (conversation: Conversation): Promise<Conversation> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('conversations')
         .insert({
           id: conversation.id,
@@ -435,7 +455,7 @@ export const db = {
     },
     
     update: async (id: string, updates: Partial<Conversation>): Promise<Conversation | null> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('conversations')
         .update(updates)
         .eq('id', id)
@@ -449,7 +469,7 @@ export const db = {
   
   otps: {
     getAll: async (): Promise<OTP[]> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('otps')
         .select('*')
         .order('createdAt', { ascending: false });
@@ -459,7 +479,7 @@ export const db = {
     },
     
     getByEmail: async (email: string): Promise<OTP | undefined> => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('otps')
         .select('*')
         .eq('email', email)
@@ -473,9 +493,9 @@ export const db = {
     
     create: async (otp: OTP): Promise<OTP> => {
       // Delete old OTPs for this email
-      await supabase.from('otps').delete().eq('email', otp.email);
+      await getSupabase().from('otps').delete().eq('email', otp.email);
       
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('otps')
         .insert({
           id: otp.id,
@@ -492,12 +512,12 @@ export const db = {
     },
     
     delete: async (email: string): Promise<void> => {
-      await supabase.from('otps').delete().eq('email', email);
+      await getSupabase().from('otps').delete().eq('email', email);
     },
     
     cleanup: async (): Promise<void> => {
       const now = new Date().toISOString();
-      await supabase.from('otps').delete().lt('expiresAt', now);
+      await getSupabase().from('otps').delete().lt('expiresAt', now);
     },
   },
 };
