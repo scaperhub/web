@@ -4,16 +4,17 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import { Item, User, Category } from '@/lib/types';
 import { formatPrice, formatDate, getProfileUrl } from '@/lib/utils';
-import { MapPin, User as UserIcon, MessageCircle, Calendar, Package, CheckCircle, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { MapPin, User as UserIcon, MessageCircle, Calendar, Package, CheckCircle, X, ChevronLeft, ChevronRight, Edit } from 'lucide-react';
 import Footer from '@/components/Footer';
 
 interface ItemDetailProps {
   user: User | null;
   onLogout: () => void;
   onOpenSellSheet?: () => void;
+  onOpenEditItemSheet?: (item: Item) => void;
 }
 
-export default function ItemDetail({ user, onLogout, onOpenSellSheet }: ItemDetailProps) {
+export default function ItemDetail({ user, onLogout, onOpenSellSheet, onOpenEditItemSheet }: ItemDetailProps) {
   const router = useRouter();
   const { id } = router.query;
   const [item, setItem] = useState<Item | null>(null);
@@ -104,6 +105,7 @@ export default function ItemDetail({ user, onLogout, onOpenSellSheet }: ItemDeta
   }
 
   const isSeller = user?.id === item.sellerId;
+  const canEdit = isSeller || user?.role === 'admin';
   const subcategory = category?.subcategories.find(sub => sub.id === item.subcategoryId);
   const images = item.images && item.images.length > 0 ? item.images : [];
 
@@ -190,9 +192,20 @@ export default function ItemDetail({ user, onLogout, onOpenSellSheet }: ItemDeta
           <div className="space-y-6">
             {/* Title and Price */}
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-4 leading-tight">
-                {item.title}
-              </h1>
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <h1 className="text-4xl font-bold text-gray-900 leading-tight flex-1">
+                  {item.title}
+                </h1>
+                {canEdit && onOpenEditItemSheet && (
+                  <button
+                    onClick={() => onOpenEditItemSheet(item)}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium whitespace-nowrap"
+                  >
+                    <Edit className="w-4 h-4" />
+                    Edit
+                  </button>
+                )}
+              </div>
               <div className="flex items-baseline gap-4 mb-6">
                 <p className="text-5xl font-bold text-gray-900">
                   {formatPrice(item.price)}
