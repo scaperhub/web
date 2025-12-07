@@ -291,7 +291,27 @@ export const db = {
       }
       
       // Fetch with subcategories
-      return db.categories.getById(category.id) as Promise<Category>;
+      const { data: catData, error: catErr } = await getSupabase()
+        .from('categories')
+        .select('*, subcategories(*)')
+        .eq('id', category.id)
+        .single();
+      
+      if (catErr || !catData) throw catErr || new Error('Category not found');
+      
+      return {
+        id: catData.id,
+        name: catData.name,
+        description: catData.description || undefined,
+        createdAt: catData.createdAt,
+        subcategories: (catData.subcategories || []).map((sub: any) => ({
+          id: sub.id,
+          name: sub.name,
+          categoryId: sub.categoryId,
+          description: sub.description || undefined,
+          createdAt: sub.createdAt,
+        })),
+      };
     },
     
     update: async (id: string, updates: Partial<Category>): Promise<Category | null> => {
@@ -332,7 +352,27 @@ export const db = {
         }
       }
       
-      const category = await db.categories.getById(id);
+      const { data: catData, error: catErr } = await getSupabase()
+        .from('categories')
+        .select('*, subcategories(*)')
+        .eq('id', id)
+        .single();
+      
+      if (catErr || !catData) return null;
+      
+      const category = {
+        id: catData.id,
+        name: catData.name,
+        description: catData.description || undefined,
+        createdAt: catData.createdAt,
+        subcategories: (catData.subcategories || []).map((sub: any) => ({
+          id: sub.id,
+          name: sub.name,
+          categoryId: sub.categoryId,
+          description: sub.description || undefined,
+          createdAt: sub.createdAt,
+        })),
+      };
       return category ?? null;
     },
     
