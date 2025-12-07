@@ -227,7 +227,7 @@ function createDb() {
         writeFile('otps.json', readFile<OTP>('otps.json').filter(o => new Date(o.expiresAt) > now));
       },
     },
-  } as typeof supabaseDb;
+  };
 }
 
 
