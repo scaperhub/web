@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1765027096547-frl7y6y9p",
+    "itemId": "1765027013553-0ubzcs4mp",
+    "buyerId": "1765027085999-asew7a6n6",
+    "sellerId": "1765026595778-xp0j7jnmu",
+    "createdAt": "2025-12-06T13:18:16.547Z",
+    "updatedAt": "2025-12-06T13:41:52.497Z",
+    "lastMessage": "Hello",
+    "lastMessageAt": "2025-12-06T13:41:52.497Z"
+  },
+  {
+    "id": "1765042790443-0frjzac6m",
+    "itemId": "1765031630762-rzq2ph47d",
+    "buyerId": "1765027085999-asew7a6n6",
+    "sellerId": "1765026595778-xp0j7jnmu",
+    "createdAt": "2025-12-06T17:39:50.443Z",
+    "updatedAt": "2025-12-06T17:40:19.066Z",
+    "lastMessage": "200",
+    "lastMessageAt": "2025-12-06T17:40:19.066Z"
+  },
+  {
+    "id": "1765050947631-cdlsp2uib",
+    "itemId": "1765049474936-82f88c3nh",
+    "buyerId": "1765026595778-xp0j7jnmu",
+    "sellerId": "1765030717587-2bw9llmv6",
+    "createdAt": "2025-12-06T19:55:47.631Z",
+    "updatedAt": "2025-12-06T19:55:47.633Z",
+    "lastMessage": "I'm interested",
+    "lastMessageAt": "2025-12-06T19:55:47.633Z"
+  }
+]

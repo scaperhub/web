@@ -1,0 +1,73 @@
+[
+  {
+    "id": "1765026595778-xp0j7jnmu",
+    "email": "hello@nagarajc.com",
+    "password": "$2a$10$2TRSIUTivxtrh/hVSBc/g.sOZ8ODxLJ.r4yI5/l45KZuEps/2eHsm",
+    "name": "Nagaraj Chandran",
+    "role": "admin",
+    "createdAt": "2025-12-06T13:09:55.778Z",
+    "status": "approved",
+    "emailVerified": true,
+    "username": "naga",
+    "bio": "Just a hobbyist obsessed with plants, rocks, wood & clean layouts.",
+    "avatar": "https://media.licdn.com/dms/image/v2/C5603AQGB1Am06UGmHw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1658384203383?e=1766620800&v=beta&t=DVq9EOu9Rm4jOuDDteA1QyaYXxxbi09-kictbMac4BA",
+    "backgroundPicture": "https://scontent.fblr24-4.fna.fbcdn.net/v/t39.30808-6/517800243_10231344021886597_47396268046143322_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=tIshi_Z7tZIQ7kNvwGX69Z8&_nc_oc=AdmXJvTxtT-9ZhxqEecxyhNgzoaMG9SmlRHOFRf9lLSsooVIzBTwcJWRrKBPqxA7Mlo&_nc_zt=23&_nc_ht=scontent.fblr24-4.fna&_nc_gid=BscEPdFqkZkmZI34z9YRHg&oh=00_Afm4GJk-GbA-z9B_LHHlNW-ifyzXxJyyRz7B1TfD0HeV5Q&oe=693A28E8",
+    "country": "IN",
+    "city": "Bangalore",
+    "verified": true,
+    "userType": "hobbyist",
+    "following": [
+      "1765027085999-asew7a6n6",
+      "1765030717587-2bw9llmv6"
+    ]
+  },
+  {
+    "id": "1765027085999-asew7a6n6",
+    "email": "nagac85@gmail.com",
+    "password": "$2a$10$XWT/IMQj8oJl/jjwnEDyuuOVuN3UftYZZvqKDIjOb/BKJF7imwj.O",
+    "name": "Nagaraj Chandran",
+    "role": "user",
+    "createdAt": "2025-12-06T13:18:05.999Z",
+    "status": "approved",
+    "emailVerified": true,
+    "username": "nagac85",
+    "bio": "Crafting nature-inspired underwater worlds, one scape at a time.",
+    "avatar": "https://yt3.googleusercontent.com/ytc/AIdro_lXqX_ZPq43u_K2_WHQUFJir-Ns3n3B_xvqqZMSLJS54HU=s160-c-k-c0x00ffffff-no-rj",
+    "backgroundPicture": "https://aquascapinglove.com/wp-content/uploads/2019/07/getting-started-feature-img-1.jpg",
+    "country": "IN",
+    "city": "Bangalore",
+    "verified": false,
+    "userType": "hobbyist",
+    "following": [
+      "1765026595778-xp0j7jnmu",
+      "1765030717587-2bw9llmv6"
+    ]
+  },
+  {
+    "id": "1765030596630-fk4ig5wyy",
+    "email": "david.roman@gmail.com",
+    "password": "$2a$10$4.Db2ae8UQNqZNyagAbDdOsb3KlouAaMM.KLKmWhG.fh1HQ.gBzZO",
+    "name": "David Roman",
+    "role": "user",
+    "status": "rejected",
+    "emailVerified": false,
+    "createdAt": "2025-12-06T14:16:36.630Z",
+    "verified": false
+  },
+  {
+    "id": "1765030717587-2bw9llmv6",
+    "email": "nagac360@gmail.com",
+    "password": "$2a$10$3RnyPgMgfm2sh4198wdfXOU.wQjjOXi3ScYb7NlIJdV.qERYaqjOa",
+    "name": "Nagaraj Chandran",
+    "role": "user",
+    "status": "approved",
+    "emailVerified": true,
+    "createdAt": "2025-12-06T14:18:37.587Z",
+    "username": "nagac360",
+    "verified": false,
+    "userType": "hobbyist",
+    "following": [
+      "1765026595778-xp0j7jnmu"
+    ]
+  }
+]
