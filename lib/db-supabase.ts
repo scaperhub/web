@@ -718,4 +718,4 @@ export const db = {
       await getSupabase().from('otps').delete().lt('expiresAt', now);
     },
   },
-  }
+};
