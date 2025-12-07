@@ -128,9 +128,9 @@ export default function Messages({ user, onLogout, onOpenSellSheet }: MessagesPr
 
   if (loading) {
     return (
-      <div className="flex flex-col min-h-screen bg-white">
+      <div className="flex flex-col min-h-screen bg-white w-full">
         <Navbar user={user} onLogout={onLogout} onOpenSellSheet={onOpenSellSheet} />
-        <div className="flex-1 max-w-7xl mx-auto">
+        <div className="flex-1 max-w-7xl mx-auto w-full">
           <div className="flex items-center justify-center h-full">
             <div className="text-sm text-gray-400">Loading conversations...</div>
           </div>
@@ -141,9 +141,9 @@ export default function Messages({ user, onLogout, onOpenSellSheet }: MessagesPr
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen bg-white w-full">
       <Navbar user={user} onLogout={onLogout} onOpenSellSheet={onOpenSellSheet} />
-      <div className="flex-1 max-w-7xl mx-auto">
+      <div className="flex-1 max-w-7xl mx-auto w-full">
         <div className="flex">
           {/* Left Sidebar - Conversations */}
           <aside className="w-64 border-r border-gray-200 bg-white min-h-[calc(100vh-80px)]">

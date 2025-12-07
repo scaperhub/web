@@ -11,9 +11,9 @@ interface PrivacyProps {
 
 export default function Privacy({ user, onLogout, onOpenSellSheet }: PrivacyProps) {
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col w-full">
       <Navbar user={user} onLogout={onLogout} onOpenSellSheet={onOpenSellSheet} />
-      <main className="flex-1 max-w-4xl mx-auto px-6 lg:px-8 py-16">
+      <main className="flex-1 max-w-4xl mx-auto px-6 lg:px-8 py-16 w-full">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Privacy Policy</h1>
           <p className="text-sm text-gray-500">Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
