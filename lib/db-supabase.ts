@@ -43,6 +43,61 @@ function toUser(data: any): User {
   };
 }
 
+function toItem(data: any): Item {
+  return {
+    id: data.id,
+    title: data.title,
+    description: data.description,
+    price: data.price,
+    quantity: data.quantity,
+    images: data.images || [],
+    categoryId: data.categoryId,
+    subcategoryId: data.subcategoryId || '',
+    sellerId: data.sellerId,
+    status: data.status,
+    approvalStatus: data.approvalStatus,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+    location: data.location,
+    condition: data.condition,
+  };
+}
+
+function toMessage(data: any): Message {
+  return {
+    id: data.id,
+    conversationId: data.conversationId,
+    senderId: data.senderId,
+    receiverId: data.receiverId,
+    itemId: data.itemId,
+    content: data.content,
+    createdAt: data.createdAt,
+    read: data.read,
+  };
+}
+
+function toConversation(data: any): Conversation {
+  return {
+    id: data.id,
+    itemId: data.itemId,
+    buyerId: data.buyerId,
+    sellerId: data.sellerId,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+    lastMessage: data.lastMessage,
+    lastMessageAt: data.lastMessageAt,
+  };
+}
+
+function toOTP(data: any): OTP {
+  return {
+    id: data.id,
+    email: data.email,
+    code: data.code,
+    expiresAt: data.expiresAt,
+    createdAt: data.createdAt,
+  };
+}
 export const db = {
   users: {
     getAll: async (): Promise<User[]> => {
@@ -666,61 +721,6 @@ export const db = {
 };
 
 
-function toItem(data: any): Item {
-  return {
-    id: data.id,
-    title: data.title,
-    description: data.description,
-    price: data.price,
-    quantity: data.quantity,
-    images: data.images || [],
-    categoryId: data.categoryId,
-    subcategoryId: data.subcategoryId || '',
-    sellerId: data.sellerId,
-    status: data.status,
-    approvalStatus: data.approvalStatus,
-    createdAt: data.createdAt,
-    updatedAt: data.updatedAt,
-    location: data.location,
-    condition: data.condition,
-  };
-}
-
-function toMessage(data: any): Message {
-  return {
-    id: data.id,
-    conversationId: data.conversationId,
-    senderId: data.senderId,
-    receiverId: data.receiverId,
-    itemId: data.itemId,
-    content: data.content,
-    createdAt: data.createdAt,
-    read: data.read,
-  };
-}
-
-function toConversation(data: any): Conversation {
-  return {
-    id: data.id,
-    itemId: data.itemId,
-    buyerId: data.buyerId,
-    sellerId: data.sellerId,
-    createdAt: data.createdAt,
-    updatedAt: data.updatedAt,
-    lastMessage: data.lastMessage,
-    lastMessageAt: data.lastMessageAt,
-  };
-}
-
-function toOTP(data: any): OTP {
-  return {
-    id: data.id,
-    email: data.email,
-    code: data.code,
-    expiresAt: data.expiresAt,
-    createdAt: data.createdAt,
-  };
-}
 
 
 
