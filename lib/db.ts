@@ -138,8 +138,6 @@ function createDb() {
         const items = readFile<Item>('items.json');
         const migrated = items.map((item: any) => {
           if (!('approvalStatus' in item)) item.approvalStatus = 'approved';
-          if (!('quantity' in item)) item.quantity = 1;
-          return item as Item;
         });
         if (migrated.some((item: any, i) => item !== items[i])) writeFile('items.json', migrated);
         return migrated;
