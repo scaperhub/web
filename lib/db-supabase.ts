@@ -297,14 +297,14 @@ export const db = {
         .eq('id', category.id)
         .single();
       
-      if (catErr || !catData) throw catErr || new Error('Category not found');
+      if (fetchErr || !fetchedCatData) throw fetchErr || new Error('Category not found');
       
       return {
-        id: catData.id,
-        name: catData.name,
-        description: catData.description || undefined,
-        createdAt: catData.createdAt,
-        subcategories: (catData.subcategories || []).map((sub: any) => ({
+        id: fetchedCatData.id,
+        name: fetchedCatData.name,
+        description: fetchedCatData.description || undefined,
+        createdAt: fetchedCatData.createdAt,
+        subcategories: (fetchedCatData.subcategories || []).map((sub: any) => ({
           id: sub.id,
           name: sub.name,
           categoryId: sub.categoryId,
