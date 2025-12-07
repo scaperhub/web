@@ -107,7 +107,6 @@ function createDb() {
         writeFile('users.json', users);
         return users[index];
       },
-    },
     categories: {
       getAll: async () => readFile<Category>('categories.json'),
       getById: async (id: string) => readFile<Category>('categories.json').find(c => c.id === id),
