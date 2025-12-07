@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Navbar from '@/components/Navbar';
 import { Category, User, Item } from '@/lib/types';
 import { formatPrice } from '@/lib/utils';
-import { Plus, Trash2, Edit, Users, CheckCircle, XCircle, X, Package, LayoutDashboard, TrendingUp, Tags, ChevronUp, ChevronDown, GripVertical } from 'lucide-react';
+import { Plus, Trash2, Edit, Users, CheckCircle, XCircle, X, Package, LayoutDashboard, TrendingUp, Tags, ChevronUp, ChevronDown, GripVertical, Ban } from 'lucide-react';
 
 interface AdminProps {
   user: User | null;
