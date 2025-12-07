@@ -260,7 +260,7 @@ export const db = {
     
     create: async (category: Category): Promise<Category> => {
       // First create category
-      const { data: catData, error: catError } = await getSupabase()
+      const { data: insertData, error: catError } = await getSupabase()
         .from('categories')
         .insert({
           id: category.id,
@@ -291,7 +291,7 @@ export const db = {
       }
       
       // Fetch with subcategories
-      const { data: catData, error: catErr } = await getSupabase()
+      const { data: fetchedCatData, error: fetchErr } = await getSupabase()
         .from('categories')
         .select('*, subcategories(*)')
         .eq('id', category.id)
@@ -352,20 +352,20 @@ export const db = {
         }
       }
       
-      const { data: catData, error: catErr } = await getSupabase()
+      const { data: updateCatData, error: updateErr } = await getSupabase()
         .from('categories')
         .select('*, subcategories(*)')
         .eq('id', id)
         .single();
       
-      if (catErr || !catData) return null;
+      if (updateErr || !updateCatData) return null;
       
       const category = {
-        id: catData.id,
-        name: catData.name,
-        description: catData.description || undefined,
-        createdAt: catData.createdAt,
-        subcategories: (catData.subcategories || []).map((sub: any) => ({
+        id: updateCatData.id,
+        name: updateCatData.name,
+        description: updateCatData.description || undefined,
+        createdAt: updateCatData.createdAt,
+        subcategories: (updateCatData.subcategories || []).map((sub: any) => ({
           id: sub.id,
           name: sub.name,
           categoryId: sub.categoryId,
