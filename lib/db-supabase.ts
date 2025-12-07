@@ -105,7 +105,88 @@ export const db = {
       if (error || !data) return null;
       return toUser(data);
     },
-  },
+    },
+    
+    delete: async (id: string): Promise<boolean> => {
+      const admin = getSupabaseAdmin();
+
+      try {
+        // Delete in order to respect foreign key constraints:
+        // 1. First, get all conversations where user is involved
+        const { data: userConversations, error: convFetchError } = await admin
+          .from('conversations')
+          .select('id')
+          .or(`buyerId.eq.${id},sellerId.eq.${id}`);
+
+        if (convFetchError) {
+          console.error('Error fetching conversations:', convFetchError);
+          throw new Error(`Failed to fetch conversations: ${convFetchError.message}`);
+        }
+
+        // 2. Delete all messages in those conversations (if any conversations exist)
+        if (userConversations && userConversations.length > 0) {
+          const conversationIds = userConversations.map(c => c.id);
+          const { error: messagesError } = await admin
+            .from('messages')
+            .delete()
+            .in('conversationId', conversationIds);
+
+          if (messagesError) {
+            console.error('Error deleting messages in conversations:', messagesError);
+            throw new Error(`Failed to delete messages: ${messagesError.message}`);
+          }
+        }
+
+        // 3. Delete any remaining messages where user is sender or receiver (orphaned messages)
+        const { error: orphanedMessagesError } = await admin
+          .from('messages')
+          .delete()
+          .or(`senderId.eq.${id},receiverId.eq.${id}`);
+
+        if (orphanedMessagesError) {
+          console.error('Error deleting orphaned messages:', orphanedMessagesError);
+          throw new Error(`Failed to delete orphaned messages: ${orphanedMessagesError.message}`);
+        }
+
+        // 4. Delete conversations where user is buyer or seller
+        const { error: conversationsError } = await admin
+          .from('conversations')
+          .delete()
+          .or(`buyerId.eq.${id},sellerId.eq.${id}`);
+
+        if (conversationsError) {
+          console.error('Error deleting conversations:', conversationsError);
+          throw new Error(`Failed to delete conversations: ${conversationsError.message}`);
+        }
+
+        // 5. Delete items where user is seller
+        const { error: itemsError } = await admin
+          .from('items')
+          .delete()
+          .eq('sellerId', id);
+
+        if (itemsError) {
+          console.error('Error deleting items:', itemsError);
+          throw new Error(`Failed to delete items: ${itemsError.message}`);
+        }
+
+        // 6. Finally, delete the user
+        const { error: userError } = await admin
+          .from('users')
+          .delete()
+          .eq('id', id);
+
+        if (userError) {
+          console.error('Error deleting user:', userError);
+          throw new Error(`Failed to delete user: ${userError.message}`);
+        }
+
+        return true;
+      } catch (error: any) {
+        console.error('Error deleting user:', error);
+        throw error; // Re-throw to let the API handler handle it
+      }
+    },
   
   categories: {
     getAll: async (): Promise<Category[]> => {
