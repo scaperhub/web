@@ -1,5 +1,5 @@
 export type UserRole = 'user' | 'admin';
-export type UserStatus = 'pending' | 'approved' | 'rejected';
+export type UserStatus = 'pending' | 'approved' | 'rejected' | 'suspended';
 export type UserType = 'hobbyist' | 'shop';
 export type ItemApprovalStatus = 'pending' | 'approved' | 'rejected';
 

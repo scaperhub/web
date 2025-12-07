@@ -71,7 +71,7 @@ export default function Admin({ user, onLogout, onOpenSellSheet }: AdminProps) {
       .then(data => setItems(data.items || []));
   };
 
-  const handleUserStatusChange = async (userId: string, status: 'approved' | 'rejected') => {
+  const handleUserStatusChange = async (userId: string, status: 'approved' | 'rejected' | 'suspended') => {
     const token = localStorage.getItem('token');
     try {
       const res = await fetch('/api/admin/users', {
@@ -90,9 +90,47 @@ export default function Admin({ user, onLogout, onOpenSellSheet }: AdminProps) {
           const data = await res.json();
           setSelectedUser(data.user);
         }
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Failed to update user status');
       }
     } catch (err) {
       alert('Failed to update user status');
+    }
+  };
+
+  const handleSuspendUser = async (userId: string) => {
+    if (!confirm('Are you sure you want to suspend this user? They will not be able to login.')) {
+      return;
+    }
+    await handleUserStatusChange(userId, 'suspended');
+  };
+
+  const handleDeleteUser = async (userId: string) => {
+    if (!confirm('Are you sure you want to delete this user? This action cannot be undone and will delete all their items, conversations, and messages.')) {
+      return;
+    }
+    
+    const token = localStorage.getItem('token');
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ userId }),
+      });
+
+      if (res.ok) {
+        loadUsers();
+        alert('User deleted successfully');
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Failed to delete user');
+      }
+    } catch (err) {
+      alert('Failed to delete user');
     }
   };
 
@@ -658,6 +696,7 @@ export default function Admin({ user, onLogout, onOpenSellSheet }: AdminProps) {
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                             u.status === 'approved' ? 'bg-green-100 text-green-700' :
                             u.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                            u.status === 'suspended' ? 'bg-orange-100 text-orange-700' :
                             'bg-red-100 text-red-700'
                           }`}>
                             {u.status}
@@ -689,25 +728,59 @@ export default function Admin({ user, onLogout, onOpenSellSheet }: AdminProps) {
                             )}
                           </button>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                          {u.status === 'pending' && (
-                            <>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <div className="flex items-center justify-end gap-2">
+                            {u.status === 'pending' && (
+                              <>
+                                <button
+                                  onClick={() => handleUserStatusChange(u.id, 'approved')}
+                                  className="text-green-600 hover:text-green-900 inline-flex items-center px-2 py-1 rounded hover:bg-green-50 transition-colors"
+                                  title="Approve user"
+                                >
+                                  <CheckCircle className="w-4 h-4 mr-1" />
+                                  Approve
+                                </button>
+                                <button
+                                  onClick={() => handleUserStatusChange(u.id, 'rejected')}
+                                  className="text-red-600 hover:text-red-900 inline-flex items-center px-2 py-1 rounded hover:bg-red-50 transition-colors"
+                                  title="Reject user"
+                                >
+                                  <XCircle className="w-4 h-4 mr-1" />
+                                  Reject
+                                </button>
+                              </>
+                            )}
+                            {u.status === 'approved' && (
+                              <button
+                                onClick={() => handleSuspendUser(u.id)}
+                                className="text-orange-600 hover:text-orange-900 inline-flex items-center px-2 py-1 rounded hover:bg-orange-50 transition-colors"
+                                title="Suspend user"
+                              >
+                                <Ban className="w-4 h-4 mr-1" />
+                                Suspend
+                              </button>
+                            )}
+                            {u.status === 'suspended' && (
                               <button
                                 onClick={() => handleUserStatusChange(u.id, 'approved')}
-                                className="text-green-600 hover:text-green-900 inline-flex items-center"
+                                className="text-green-600 hover:text-green-900 inline-flex items-center px-2 py-1 rounded hover:bg-green-50 transition-colors"
+                                title="Unsuspend user"
                               >
                                 <CheckCircle className="w-4 h-4 mr-1" />
-                                Approve
+                                Unsuspend
                               </button>
+                            )}
+                            {u.id !== user?.id && (
                               <button
-                                onClick={() => handleUserStatusChange(u.id, 'rejected')}
-                                className="text-red-600 hover:text-red-900 inline-flex items-center"
+                                onClick={() => handleDeleteUser(u.id)}
+                                className="text-red-600 hover:text-red-900 inline-flex items-center px-2 py-1 rounded hover:bg-red-50 transition-colors"
+                                title="Delete user (cannot be undone)"
                               >
-                                <XCircle className="w-4 h-4 mr-1" />
-                                Reject
+                                <Trash2 className="w-4 h-4 mr-1" />
+                                Delete
                               </button>
-                            </>
-                          )}
+                            )}
+                          </div>
                         </td>
                       </tr>
                     ))}
