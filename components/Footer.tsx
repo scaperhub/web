@@ -8,7 +8,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <Link href="/" className="text-2xl font-semibold text-gray-900 tracking-tight mb-2 inline-block">
-              ScaperHub.
+              ScaperHub<span className="text-primary-500">.</span>
             </Link>
             <p className="text-sm text-gray-600 max-w-md">
               Your Aquascape Marketplace. Connect with fellow hobbyists and shop owners to buy, sell, and discover the best aquarium equipment.
@@ -32,7 +32,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-200 pt-8 mt-8">
           <p className="text-sm text-gray-500 text-center">
-            © {new Date().getFullYear()} ScaperHub. All rights reserved.
+            © {new Date().getFullYear()} ScaperHub<span className="text-primary-500">.</span> All rights reserved.
           </p>
         </div>
       </div>

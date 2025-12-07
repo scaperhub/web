@@ -16,7 +16,7 @@ export default function Navbar({ user, onLogout, onOpenSellSheet }: NavbarProps)
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center space-x-12">
             <Link href="/" className="text-xl font-semibold text-gray-900 tracking-tight">
-              ScaperHub.
+              ScaperHub<span className="text-primary-500">.</span>
             </Link>
             <div className="hidden md:flex items-center space-x-1">
               {user && (
