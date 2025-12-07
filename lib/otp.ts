@@ -74,5 +74,86 @@ export async function sendOTP(email: string, code: string): Promise<void> {
   }
 }
 
+export async function sendWelcomeEmail(email: string, name: string): Promise<void> {
+  console.log(`[Welcome Email] Sending welcome email to: ${email}`);
+  
+  const resendApiKey = process.env.RESEND_API_KEY;
+  
+  if (resendApiKey) {
+    try {
+      const resend = new Resend(resendApiKey);
+      
+      const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
+      
+      const result = await resend.emails.send({
+        from: fromEmail,
+        to: email,
+        subject: 'Welcome to ScaperHub!',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #3943B7; font-size: 32px; margin: 0;">Welcome to ScaperHub<span style="color: #3943B7;">.</span></h1>
+            </div>
+            
+            <div style="background: #f9fafb; padding: 30px; border-radius: 8px; margin-bottom: 30px;">
+              <p style="font-size: 18px; color: #111827; margin: 0 0 20px 0;">Hi ${name},</p>
+              
+              <p style="color: #374151; line-height: 1.6; margin: 0 0 20px 0;">
+                Great news! Your account has been approved and you can now start using ScaperHub.
+              </p>
+              
+              <p style="color: #374151; line-height: 1.6; margin: 0 0 20px 0;">
+                You can now:
+              </p>
+              
+              <ul style="color: #374151; line-height: 1.8; margin: 0 0 20px 0; padding-left: 20px;">
+                <li>Browse and discover amazing aquascape equipment</li>
+                <li>List your own items for sale</li>
+                <li>Connect with fellow hobbyists and shop owners</li>
+                <li>Build your profile and showcase your collection</li>
+              </ul>
+              
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://scaperhub.com'}/login" 
+                   style="display: inline-block; background-color: #3943B7; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 500;">
+                  Get Started
+                </a>
+              </div>
+            </div>
+            
+            <p style="color: #6b7280; font-size: 14px; text-align: center; margin: 30px 0 0 0;">
+              If you have any questions, feel free to reach out to us at 
+              <a href="mailto:contact@scaperhub.com" style="color: #3943B7; text-decoration: none;">contact@scaperhub.com</a>
+            </p>
+            
+            <p style="color: #9ca3af; font-size: 12px; text-align: center; margin-top: 20px;">
+              © ${new Date().getFullYear()} ScaperHub<span style="color: #3943B7;">.</span> All rights reserved.
+            </p>
+          </div>
+        `,
+      });
+      
+      if (result.error) {
+        console.error('[Welcome Email] Resend API error:', result.error);
+        throw new Error(`Resend error: ${JSON.stringify(result.error)}`);
+      }
+      
+      console.log(`[Welcome Email] Email sent successfully to ${email}. ID: ${result.data?.id}`);
+    } catch (error: any) {
+      console.error('[Welcome Email] Failed to send email via Resend:', error.message);
+      console.error('[Welcome Email] Full error:', error);
+      
+      if (error.response) {
+        console.error('[Welcome Email] Resend response:', error.response);
+      }
+      
+      // Don't throw - allow approval to continue even if email fails
+      // Admin can still approve the user
+    }
+  } else {
+    console.log('[Welcome Email] RESEND_API_KEY not set. Welcome email not sent.');
+  }
+}
+
 
 
