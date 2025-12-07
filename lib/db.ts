@@ -228,7 +228,7 @@ function createDb() {
       },
     },
   },
-  }
+}
 
 
 export const db = createDb() as unknown as typeof supabaseDb;
