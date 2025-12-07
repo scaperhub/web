@@ -6,7 +6,7 @@ import { db as supabaseDb } from './db-supabase';
 const USE_SUPABASE = process.env.USE_SUPABASE === 'true' || 
                      (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
-function createDb() {
+function createDb(): typeof supabaseDb {
   if (USE_SUPABASE) {
     return supabaseDb;
   }
