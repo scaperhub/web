@@ -69,6 +69,30 @@ export default function Register({ user, onLogin, onLogout, onOpenSellSheet }: R
       setSuccess('Registration successful! Check your email for the OTP code.');
       setStep('verify');
       setLoading(false);
+      
+      // In development/localhost, try to fetch and display OTP
+      if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+        setTimeout(async () => {
+          try {
+            const otpRes = await fetch('/api/auth/get-otp', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email }),
+            });
+            const otpData = await otpRes.json();
+            if (otpData.code) {
+              setSuccess(`Registration successful! Your OTP code is: ${otpData.code} (Development mode)`);
+              console.log('🔑 OTP Code for', email, ':', otpData.code);
+            }
+          } catch (err) {
+            // Silently fail - OTP retrieval is optional
+            console.log('💡 Tip: You can get your OTP by calling /api/auth/get-otp with your email');
+          }
+        }, 1000);
+      } else {
+        // In production, show message about getting OTP
+        console.log('💡 OTP has been generated. Check your email or use /api/auth/get-otp endpoint to retrieve it.');
+      }
     } catch (err) {
       setError('An error occurred. Please try again.');
       setLoading(false);

@@ -18,12 +18,29 @@ export function createOTP(email: string): { code: string; expiresAt: string } {
 // In a real application, you would send this via email service
 // For now, we'll just log it (in development) or store it
 export async function sendOTP(email: string, code: string): Promise<void> {
-  // In production, integrate with email service like SendGrid, AWS SES, etc.
-  // For development, we'll log it to console
+  // Log OTP for development/testing
   console.log(`[OTP] Email: ${email}, Code: ${code}`);
+  console.log(`[OTP] You can retrieve this code via /api/auth/get-otp endpoint (development only)`);
   
-  // You can also store it in a file for testing
-  // In production, remove this console.log and use a real email service
+  // TODO: Integrate with email service in production
+  // Options:
+  // 1. Resend (https://resend.com) - Simple, good free tier
+  // 2. SendGrid - Popular, good free tier
+  // 3. AWS SES - Cost-effective for high volume
+  // 4. Supabase Auth (if using Supabase Auth instead of custom)
+  
+  // Example with Resend (uncomment and configure):
+  /*
+  if (process.env.RESEND_API_KEY) {
+    const resend = require('resend').Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: 'noreply@yourdomain.com',
+      to: email,
+      subject: 'Your OTP Code',
+      html: `<p>Your OTP code is: <strong>${code}</strong></p><p>This code expires in 10 minutes.</p>`,
+    });
+  }
+  */
 }
 
 
