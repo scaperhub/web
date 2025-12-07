@@ -230,3 +230,5 @@ function createDb() {
   } as typeof supabaseDb;
 }
 
+
+export const db = createDb() as unknown as typeof supabaseDb;
