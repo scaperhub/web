@@ -196,14 +196,30 @@ export default function ItemDetail({ user, onLogout, onOpenSellSheet, onOpenEdit
                 <h1 className="text-4xl font-bold text-gray-900 leading-tight flex-1">
                   {item.title}
                 </h1>
-                {canEdit && onOpenEditItemSheet && item && (
-                  <button
-                    onClick={() => onOpenEditItemSheet(item)}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium whitespace-nowrap"
-                  >
-                    <Edit className="w-4 h-4" />
-                    Edit
-                  </button>
+                {item && (
+                  <>
+                    {/* Debug info - remove after fixing */}
+                    {user && (
+                      <div className="text-xs text-gray-500 mb-2">
+                        Debug: User ID: {user.id}, Seller ID: {item.sellerId}, Match: {String(user.id === item.sellerId)}, Role: {user.role}, CanEdit: {String(canEdit)}, HasFunction: {String(!!onOpenEditItemSheet)}
+                      </div>
+                    )}
+                    {canEdit && onOpenEditItemSheet && (
+                      <button
+                        onClick={() => onOpenEditItemSheet(item)}
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium whitespace-nowrap"
+                      >
+                        <Edit className="w-4 h-4" />
+                        Edit
+                      </button>
+                    )}
+                    {canEdit && !onOpenEditItemSheet && (
+                      <div className="text-xs text-red-500">Edit function not available</div>
+                    )}
+                    {!canEdit && user && (
+                      <div className="text-xs text-gray-400">You cannot edit this item</div>
+                    )}
+                  </>
                 )}
               </div>
               <div className="flex items-baseline gap-4 mb-6">
