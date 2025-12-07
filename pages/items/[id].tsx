@@ -104,24 +104,10 @@ export default function ItemDetail({ user, onLogout, onOpenSellSheet, onOpenEdit
     );
   }
 
-  const isSeller = user?.id === item.sellerId;
-  const canEdit = isSeller || user?.role === 'admin';
-  const subcategory = category?.subcategories.find(sub => sub.id === item.subcategoryId);
-  
-  // Debug: Log to check if props are being passed
-  useEffect(() => {
-    if (item) {
-      console.log('Item Detail Debug:', {
-        userId: user?.id,
-        sellerId: item.sellerId,
-        isSeller,
-        canEdit,
-        userRole: user?.role,
-        hasEditFunction: !!onOpenEditItemSheet
-      });
-    }
-  }, [item, user, isSeller, canEdit, onOpenEditItemSheet]);
-  const images = item.images && item.images.length > 0 ? item.images : [];
+  const isSeller = item ? user?.id === item.sellerId : false;
+  const canEdit = item ? (isSeller || user?.role === 'admin') : false;
+  const subcategory = category?.subcategories.find(sub => sub.id === item?.subcategoryId);
+  const images = item?.images && item.images.length > 0 ? item.images : [];
 
   const nextImage = () => {
     if (images.length > 0) {
@@ -210,20 +196,13 @@ export default function ItemDetail({ user, onLogout, onOpenSellSheet, onOpenEdit
                 <h1 className="text-4xl font-bold text-gray-900 leading-tight flex-1">
                   {item.title}
                 </h1>
-                {(canEdit || user) && (
+                {canEdit && onOpenEditItemSheet && item && (
                   <button
-                    onClick={() => {
-                      if (onOpenEditItemSheet && canEdit) {
-                        onOpenEditItemSheet(item);
-                      } else {
-                        console.log('Edit button clicked but:', { canEdit, hasFunction: !!onOpenEditItemSheet, userId: user?.id, sellerId: item.sellerId, userRole: user?.role });
-                      }
-                    }}
+                    onClick={() => onOpenEditItemSheet(item)}
                     className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium whitespace-nowrap"
-                    disabled={!canEdit || !onOpenEditItemSheet}
                   >
                     <Edit className="w-4 h-4" />
-                    Edit {!canEdit ? '(Not authorized)' : ''} {!onOpenEditItemSheet ? '(No function)' : ''}
+                    Edit
                   </button>
                 )}
               </div>
