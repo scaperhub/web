@@ -29,9 +29,10 @@ export async function sendOTP(email: string, code: string): Promise<void> {
       const resend = new Resend(resendApiKey);
       
       // Get the from email from env or use default
+      // Note: onboarding@resend.dev may bounce - you should verify your own domain
       const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
       
-      await resend.emails.send({
+      const result = await resend.emails.send({
         from: fromEmail,
         to: email,
         subject: 'Your ScaperHub Verification Code',
@@ -48,11 +49,24 @@ export async function sendOTP(email: string, code: string): Promise<void> {
         `,
       });
       
-      console.log(`[OTP] Email sent successfully to ${email}`);
+      if (result.error) {
+        console.error('[OTP] Resend API error:', result.error);
+        throw new Error(`Resend error: ${JSON.stringify(result.error)}`);
+      }
+      
+      console.log(`[OTP] Email sent successfully to ${email}. ID: ${result.data?.id}`);
     } catch (error: any) {
       console.error('[OTP] Failed to send email via Resend:', error.message);
+      console.error('[OTP] Full error:', error);
+      
+      // Log specific bounce reasons if available
+      if (error.response) {
+        console.error('[OTP] Resend response:', error.response);
+      }
+      
       // Don't throw - allow registration to continue even if email fails
       // OTP is still stored in database and can be retrieved
+      // User can still verify using the get-otp endpoint
     }
   } else {
     console.log('[OTP] RESEND_API_KEY not set. Email not sent. OTP stored in database.');
