@@ -2,9 +2,10 @@ import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { User } from '@/lib/types';
+import { User, Item } from '@/lib/types';
 import SellSheet from '@/components/SellSheet';
 import EditProfileSheet from '@/components/EditProfileSheet';
+import EditItemSheet from '@/components/EditItemSheet';
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -12,6 +13,8 @@ export default function App({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(true);
   const [showSellSheet, setShowSellSheet] = useState(false);
   const [showEditProfileSheet, setShowEditProfileSheet] = useState(false);
+  const [showEditItemSheet, setShowEditItemSheet] = useState(false);
+  const [editingItem, setEditingItem] = useState<Item | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -62,6 +65,15 @@ export default function App({ Component, pageProps }: AppProps) {
     setShowEditProfileSheet(true);
   };
 
+  const openEditItemSheet = (item: Item) => {
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+    setEditingItem(item);
+    setShowEditItemSheet(true);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -79,6 +91,7 @@ export default function App({ Component, pageProps }: AppProps) {
         onLogout={logout}
         onOpenSellSheet={openSellSheet}
         onOpenEditProfileSheet={openEditProfileSheet}
+        onOpenEditItemSheet={openEditItemSheet}
       />
       <SellSheet
         user={user}
@@ -96,8 +109,18 @@ export default function App({ Component, pageProps }: AppProps) {
           login(updatedUser, localStorage.getItem('token') || '');
         }}
       />
+      <EditItemSheet
+        user={user}
+        item={editingItem}
+        isOpen={showEditItemSheet}
+        onClose={() => {
+          setShowEditItemSheet(false);
+          setEditingItem(null);
+        }}
+        onSuccess={(itemId) => {
+          router.push(`/items/${itemId}`);
+        }}
+      />
     </>
   );
 }
-
-// EditItemSheet added Sun Dec  7 15:39:01 IST 2025
