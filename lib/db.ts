@@ -138,8 +138,6 @@ function createDb() {
         const migrated = items.map((item: any) => {
           if (!('approvalStatus' in item)) item.approvalStatus = 'approved';
         });
-        if (migrated.some((item: any, i) => item !== items[i])) writeFile('items.json', migrated);
-        return migrated;
       },
       getById: async (id: string) => readFile<Item>('items.json').find(i => i.id === id),
       getBySeller: async (sellerId: string) => readFile<Item>('items.json').filter(i => i.sellerId === sellerId),
