@@ -158,9 +158,9 @@ export default function Register({ user, onLogin, onLogout, onOpenSellSheet }: R
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen bg-white">
       <Navbar user={user} onLogout={onLogout} onOpenSellSheet={onOpenSellSheet} />
-      <main className="max-w-md mx-auto px-6 py-20">
+      <main className="flex-1 max-w-md mx-auto px-6 py-20">
         <div className="mb-10">
           <h1 className="text-3xl font-semibold text-gray-900 mb-2">
             Create account
