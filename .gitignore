@@ -34,7 +34,7 @@ yarn-error.log*
 next-env.d.ts
 
 # database
-/data
+# /data  # Commented out to allow data in git for Vercel deployment
 
 # uploads
 /public/uploads/*
