@@ -43,3 +43,4 @@ The code expects a bucket called `uploads` in Supabase Storage. Since you just s
 
 Once the bucket is created, image uploads will work immediately. No redeploy needed! 🎉
 
+

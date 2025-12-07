@@ -98,3 +98,4 @@ After setting up email:
 - ✅ OTP can be retrieved via API (development)
 - ❌ Email sending not implemented (needs email service)
 
+

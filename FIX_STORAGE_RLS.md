@@ -110,3 +110,4 @@ Supabase Storage has Row Level Security (RLS) enabled by default. Even with the 
 
 Disable RLS on the `uploads` bucket and uploads will work immediately! 🎉
 
+

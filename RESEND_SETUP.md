@@ -70,3 +70,4 @@ After adding the environment variable:
 
 Once `RESEND_API_KEY` is set, emails will be sent automatically when users register! 🎉
 
+

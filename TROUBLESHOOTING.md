@@ -129,3 +129,4 @@ fetch('/api/items')
 3. Make sure Supabase tables match the schema
 4. Try creating a user directly in Supabase Table Editor to test
 
+
