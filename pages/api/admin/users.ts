@@ -65,44 +65,5 @@ export default async function handler(
     return res.status(200).json({ user: userWithoutPassword });
   }
 
-  // DELETE handler added above
   return res.status(405).json({ error: 'Method not allowed' });
 }
-
-
-  if (req.method === 'DELETE' || req.method === 'delete') {
-    console.log('[Admin Users API] DELETE request received, method:', req.method);
-    const { userId } = req.body;
-    console.log('[Admin Users API] UserId to delete:', userId);
-
-    if (!userId) {
-      return res.status(400).json({ error: 'Missing userId' });
-    }
-
-    // Check if user exists
-    const userToDelete = await db.users.getById(userId);
-    if (!userToDelete) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    // Prevent deleting yourself
-    if (userId === user.id) {
-      return res.status(400).json({ error: 'You cannot delete your own account' });
-    }
-
-    try {
-      const success = await db.users.delete(userId);
-
-      if (!success) {
-        return res.status(500).json({ error: 'Failed to delete user. Please check server logs for details.' });
-      }
-
-      return res.status(200).json({ message: 'User deleted successfully' });
-    } catch (error: any) {
-      console.error('Error deleting user:', error);
-      return res.status(500).json({ 
-        error: 'Failed to delete user', 
-        details: error.message || 'Unknown error occurred' 
-      });
-    }
-  }
