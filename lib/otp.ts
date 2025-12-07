@@ -76,6 +76,8 @@ export async function sendOTP(email: string, code: string): Promise<void> {
 
 export async function sendWelcomeEmail(email: string, name: string): Promise<void> {
   console.log(`[Welcome Email] Sending welcome email to: ${email}`);
+  console.log(`[Welcome Email] RESEND_API_KEY exists: ${!!process.env.RESEND_API_KEY}`);
+  console.log(`[Welcome Email] RESEND_FROM_EMAIL: ${process.env.RESEND_FROM_EMAIL || 'not set (will use default)'}`);
   
   const resendApiKey = process.env.RESEND_API_KEY;
   
