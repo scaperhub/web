@@ -719,5 +719,3 @@ export const db = {
     },
   },
   }
-};
-
