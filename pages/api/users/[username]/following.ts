@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db';
+import { User } from '@/lib/types';
 
 export default async function handler(
   req: NextApiRequest,
@@ -25,7 +26,7 @@ export default async function handler(
   const allUsers = await db.users.getAll();
   const following = (profileUser.following || [])
     .map(id => allUsers.find(u => u.id === id))
-    .filter(Boolean)
+    .filter((user): user is User => user !== undefined)
     .map(({ password, ...user }) => user); // Remove passwords
 
   return res.status(200).json({ following });

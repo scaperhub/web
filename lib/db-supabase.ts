@@ -210,7 +210,8 @@ export const db = {
         }
       }
       
-      return db.categories.getById(id) || null;
+      const category = await db.categories.getById(id);
+      return category ?? null;
     },
     
     delete: async (id: string): Promise<boolean> => {
