@@ -56,6 +56,12 @@ export default async function handler(
       const randomString = Math.random().toString(36).substring(2, 15);
       const fileName = `${user.id}/${timestamp}-${randomString}.${ext}`;
 
+      // Check if supabaseAdmin is available
+      if (!supabaseAdmin) {
+        console.error('Supabase admin client not initialized');
+        return res.status(500).json({ error: 'Storage service not configured. Please check SUPABASE_SERVICE_ROLE_KEY environment variable.' });
+      }
+
       // Upload to Supabase Storage
       const { data, error } = await supabaseAdmin.storage
         .from('uploads')
@@ -66,6 +72,15 @@ export default async function handler(
 
       if (error) {
         console.error('Supabase upload error:', error);
+        
+        // Provide helpful error message for common issues
+        if (error.message?.includes('Bucket not found') || error.message?.includes('not found')) {
+          return res.status(500).json({ 
+            error: 'Storage bucket not found. Please create an "uploads" bucket in Supabase Storage and make it public.',
+            details: 'Go to Supabase Dashboard → Storage → New bucket → Name: "uploads" → Enable "Public bucket"'
+          });
+        }
+        
         return res.status(500).json({ error: 'Failed to upload to storage: ' + error.message });
       }
 
