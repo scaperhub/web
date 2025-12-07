@@ -165,34 +165,6 @@ function createDb(): typeof supabaseDb {
       },
     },
     messages: {
-      getAll: async () => readFile<Message>('messages.json'),
-      getByConversation: async (conversationId: string) => 
-        readFile<Message>('messages.json')
-          .filter(m => m.conversationId === conversationId)
-          .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()),
-      create: async (message: Message) => {
-        const messages = readFile<Message>('messages.json');
-        messages.push(message);
-        writeFile('messages.json', messages);
-        return message;
-      },
-      markAsRead: async (conversationId: string, userId: string) => {
-        const messages = readFile<Message>('messages.json');
-        writeFile('messages.json', messages.map(m => 
-          m.conversationId === conversationId && m.receiverId === userId && !m.read ? { ...m, read: true } : m
-        ));
-      },
-    },
-    conversations: {
-      getAll: async () => readFile<Conversation>('conversations.json'),
-      getByUser: async (userId: string) => 
-        readFile<Conversation>('conversations.json').filter(c => c.buyerId === userId || c.sellerId === userId),
-      getById: async (id: string) => readFile<Conversation>('conversations.json').find(c => c.id === id),
-      getByItemAndBuyer: async (itemId: string, buyerId: string) => 
-        readFile<Conversation>('conversations.json').find(c => c.itemId === itemId && c.buyerId === buyerId),
-      create: async (conversation: Conversation) => {
-        const conversations = readFile<Conversation>('conversations.json');
-        conversations.push(conversation);
         writeFile('conversations.json', conversations);
         return conversation;
       },
