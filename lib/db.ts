@@ -230,4 +230,3 @@ function createDb() {
   } as typeof supabaseDb;
 }
 
-export const db = createDb();
