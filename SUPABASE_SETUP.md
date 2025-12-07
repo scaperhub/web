@@ -1,190 +1,134 @@
-# Supabase Integration Guide
-
-This guide will help you set up Supabase for your ScaperHub project.
+# Supabase Setup Guide
 
 ## Step 1: Create a Supabase Project
 
-1. Go to [https://supabase.com](https://supabase.com)
+1. Go to https://supabase.com
 2. Sign up or log in
 3. Click "New Project"
 4. Fill in:
-   - **Name**: ScaperHub (or your preferred name)
-   - **Database Password**: Choose a strong password (save it!)
-   - **Region**: Choose closest to your users
+   - **Name**: Your project name (e.g., "scaperhub")
+   - **Database Password**: Create a strong password (save this!)
+   - **Region**: Choose closest to you
 5. Click "Create new project"
-6. Wait for the project to be set up (2-3 minutes)
+6. Wait 2-3 minutes for the project to be created
 
 ## Step 2: Get Your Supabase Credentials
 
-1. In your Supabase project dashboard, go to **Settings** → **API**
-2. Copy the following:
-   - **Project URL** (under "Project URL")
-   - **anon/public key** (under "Project API keys")
-   - **service_role key** (under "Project API keys" - keep this secret!)
+Once your project is ready:
 
-## Step 3: Set Up Environment Variables
+1. Go to **Settings** → **API** (in the left sidebar)
+2. You'll see two important values:
 
-Create a `.env.local` file in your project root:
+### Project URL
+- This is your `NEXT_PUBLIC_SUPABASE_URL`
+- Looks like: `https://xxxxxxxxxxxxx.supabase.co`
+- Copy this entire URL
 
-```env
-# Supabase Configuration
-NEXT_PUBLIC_SUPABASE_URL=your-project-url-here
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
+### anon/public key
+- This is your `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- Looks like: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` (very long string)
+- Copy this entire key
 
-# Enable Supabase (set to 'true' to use Supabase, 'false' for JSON files)
-USE_SUPABASE=true
+### service_role key (Optional, for admin operations)
+- Scroll down to find "service_role" key
+- This is your `SUPABASE_SERVICE_ROLE_KEY`
+- ⚠️ **Keep this secret!** Never expose it in client-side code
+- Only use it for server-side admin operations
 
-# JWT Secret (keep your existing one)
-JWT_SECRET=your-jwt-secret-here
-```
+## Step 3: Set Up the Database Schema
 
-**Important**: 
-- Never commit `.env.local` to git (it's already in `.gitignore`)
-- The `NEXT_PUBLIC_` prefix makes these variables available in the browser
-- The service role key should NEVER be exposed to the client
-
-## Step 4: Create Database Schema
-
-1. In your Supabase dashboard, go to **SQL Editor**
+1. In Supabase, go to **SQL Editor** (left sidebar)
 2. Click "New query"
-3. Copy and paste the contents of `supabase-schema.sql`
-4. Click "Run" (or press Cmd/Ctrl + Enter)
-5. You should see "Success. No rows returned"
+3. Open the file `supabase-schema.sql` from your project
+4. Copy ALL the SQL code
+5. Paste it into the SQL Editor
+6. Click "Run" (or press Cmd/Ctrl + Enter)
+7. You should see "Success. No rows returned"
 
-This creates all the necessary tables, indexes, and security policies.
+## Step 4: Add Environment Variables to Vercel
 
-## Step 5: Migrate Existing Data (Optional)
+1. Go to your Vercel project dashboard
+2. Click on your project
+3. Go to **Settings** → **Environment Variables**
+4. Add these three variables:
 
-If you have existing data in JSON files:
+### Variable 1:
+- **Name**: `NEXT_PUBLIC_SUPABASE_URL`
+- **Value**: Your Project URL from Step 2 (e.g., `https://xxxxxxxxxxxxx.supabase.co`)
+- **Environment**: Select all (Production, Preview, Development)
 
-1. Make sure your `.env.local` is set up correctly
-2. Run the migration script:
+### Variable 2:
+- **Name**: `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- **Value**: Your anon/public key from Step 2
+- **Environment**: Select all (Production, Preview, Development)
 
-```bash
-npm install dotenv
-npx ts-node scripts/migrate-to-supabase.ts
-```
+### Variable 3:
+- **Name**: `USE_SUPABASE`
+- **Value**: `true`
+- **Environment**: Select all (Production, Preview, Development)
 
-This will migrate all your existing users, items, categories, messages, etc. to Supabase.
+### Variable 4 (Optional):
+- **Name**: `SUPABASE_SERVICE_ROLE_KEY`
+- **Value**: Your service_role key from Step 2
+- **Environment**: Production only (for security)
 
-## Step 6: Update Your Code
+5. Click "Save" for each variable
 
-The code is already set up! The `lib/db.ts` file automatically uses Supabase when:
-- `USE_SUPABASE=true` is set, OR
-- Supabase environment variables are present
+## Step 5: Redeploy Your Project
 
-## Step 7: Update API Routes to Use Async
+After adding the environment variables:
 
-All API routes need to be updated to use `async/await` since database operations are now asynchronous.
+1. Go to **Deployments** tab in Vercel
+2. Click the three dots (⋯) on the latest deployment
+3. Click "Redeploy"
+4. Or push a new commit to trigger a new deployment
 
-### Example: `pages/api/items/index.ts`
+## Step 6: Migrate Your Local Data (Optional)
 
-**Before:**
-```typescript
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  const items = db.items.getAll();
-  // ...
-}
-```
+If you have existing data in your local `data/` folder:
 
-**After:**
-```typescript
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const items = await db.items.getAll();
-  // ...
-}
-```
-
-You'll need to update all API routes in:
-- `pages/api/items/`
-- `pages/api/users/`
-- `pages/api/categories/`
-- `pages/api/messages/`
-- `pages/api/auth/`
-- `pages/api/admin/`
-
-## Step 8: Test the Integration
-
-1. Start your development server:
-   ```bash
-   npm run dev
+1. Make sure you have a `.env.local` file with your Supabase credentials:
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxxx.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
    ```
 
-2. Test basic functionality:
-   - Register a new user
-   - Create a category
-   - List an item
-   - Send a message
+2. Run the migration script:
+   ```bash
+   node scripts/migrate-to-supabase.js
+   ```
 
-3. Check Supabase dashboard:
-   - Go to **Table Editor** to see your data
-   - Verify data is being created correctly
-
-## Step 9: Deploy to Production
-
-### Vercel Deployment
-
-1. Push your code to GitHub
-2. Import project to Vercel
-3. Add environment variables in Vercel dashboard:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `SUPABASE_SERVICE_ROLE_KEY`
-   - `USE_SUPABASE=true`
-   - `JWT_SECRET`
-
-4. Deploy!
-
-### Other Platforms
-
-Add the same environment variables to your hosting platform.
+3. Check your Supabase dashboard → **Table Editor** to verify data was migrated
 
 ## Troubleshooting
 
-### "Missing Supabase credentials" error
+### "supabaseUrl is required" error
+- Make sure `NEXT_PUBLIC_SUPABASE_URL` is set correctly in Vercel
+- Redeploy after adding environment variables
 
-- Check that `.env.local` exists and has the correct variables
-- Restart your development server after adding environment variables
-- Make sure variable names match exactly (case-sensitive)
+### Data not showing
+- Check that the SQL schema was run successfully
+- Verify data exists in Supabase Table Editor
+- Check browser console for errors
 
-### "relation does not exist" error
+### Can't write to database
+- Make sure `USE_SUPABASE=true` is set
+- Check that you're using the correct keys
+- Verify Row Level Security (RLS) policies if you set them up
 
-- Make sure you ran the SQL schema in Supabase SQL Editor
-- Check that all tables were created (go to Table Editor)
+## Summary
 
-### "Row Level Security" errors
+**What you need:**
+1. ✅ Supabase project created
+2. ✅ Database schema run (from `supabase-schema.sql`)
+3. ✅ Environment variables set in Vercel:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `USE_SUPABASE=true`
+4. ✅ Project redeployed
 
-- The schema includes RLS policies that allow all operations
-- If you need to restrict access, update the policies in Supabase dashboard
+**Where to find your credentials:**
+- Supabase Dashboard → Settings → API
 
-### Migration script fails
-
-- Make sure `SUPABASE_SERVICE_ROLE_KEY` is set (not just anon key)
-- Check that your JSON files exist in the `data/` directory
-- Verify your Supabase project is active
-
-## Security Best Practices
-
-1. **Never expose service role key** - Only use it server-side
-2. **Use RLS policies** - Restrict access based on user authentication
-3. **Enable email verification** - Use Supabase Auth for better security
-4. **Regular backups** - Supabase provides automatic backups on paid plans
-5. **Monitor usage** - Check Supabase dashboard for unusual activity
-
-## Next Steps
-
-- Set up Supabase Auth for better authentication
-- Configure email templates for OTP
-- Set up database backups
-- Monitor performance in Supabase dashboard
-- Consider using Supabase Storage for images instead of local uploads
-
-## Need Help?
-
-- [Supabase Documentation](https://supabase.com/docs)
-- [Supabase Discord](https://discord.supabase.com)
-- Check your Supabase project logs in the dashboard
-
-
-
+**That's it!** Your app will now use Supabase instead of JSON files.
