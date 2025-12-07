@@ -75,7 +75,8 @@ export default async function handler(
       subcategoryId: subcategoryId || '', // Allow empty string if no subcategories
       sellerId: user.id,
       status: 'available',
-      approvalStatus: 'pending',
+      // Admin users' items are automatically approved
+      approvalStatus: user.role === 'admin' ? 'approved' : 'pending',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       location,
