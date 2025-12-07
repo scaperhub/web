@@ -107,6 +107,12 @@ export default function Admin({ user, onLogout, onOpenSellSheet }: AdminProps) {
   };
 
   const handleDeleteUser = async (userId: string) => {
+    // Check if trying to delete yourself
+    if (userId === user?.id) {
+      alert('You cannot delete your own account. Please use another admin account to delete this user.');
+      return;
+    }
+
     if (!confirm('Are you sure you want to delete this user? This action cannot be undone and will delete all their items, conversations, and messages.')) {
       return;
     }
@@ -127,10 +133,15 @@ export default function Admin({ user, onLogout, onOpenSellSheet }: AdminProps) {
         alert('User deleted successfully');
       } else {
         const data = await res.json();
-        alert(data.error || 'Failed to delete user');
+        const errorMsg = data.details 
+          ? `${data.error}: ${data.details}` 
+          : data.error || 'Failed to delete user';
+        alert(errorMsg);
+        console.error('Delete user error:', data);
       }
-    } catch (err) {
-      alert('Failed to delete user');
+    } catch (err: any) {
+      alert(`Failed to delete user: ${err.message || 'Unknown error'}`);
+      console.error('Delete user exception:', err);
     }
   };
 
