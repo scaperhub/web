@@ -105,7 +105,6 @@ export const db = {
       if (error || !data) return null;
       return toUser(data);
     },
-    },
     
     delete: async (id: string): Promise<boolean> => {
       const admin = getSupabaseAdmin();
