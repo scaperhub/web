@@ -81,6 +81,13 @@ export default async function handler(
           });
         }
         
+        if (error.message?.includes('row-level security') || error.message?.includes('RLS')) {
+          return res.status(500).json({ 
+            error: 'Row Level Security (RLS) is blocking uploads. Please disable RLS on the "uploads" bucket or create proper policies.',
+            details: 'Go to Supabase Dashboard → Storage → Policies → uploads → Disable RLS or create upload policies'
+          });
+        }
+        
         return res.status(500).json({ error: 'Failed to upload to storage: ' + error.message });
       }
 
