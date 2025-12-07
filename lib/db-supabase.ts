@@ -703,19 +703,3 @@ export const db = {
           createdAt: otp.createdAt,
         })
         .select()
-        .single();
-      
-      if (error) throw error;
-      return toOTP(data);
-    },
-    
-    delete: async (email: string): Promise<void> => {
-      await getSupabase().from('otps').delete().eq('email', email);
-    },
-    
-    cleanup: async (): Promise<void> => {
-      const now = new Date().toISOString();
-      await getSupabase().from('otps').delete().lt('expiresAt', now);
-    },
-  },
-};
