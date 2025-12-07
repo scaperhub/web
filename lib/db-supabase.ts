@@ -20,6 +20,29 @@ function getSupabaseAdmin() {
   if (!supabaseAdmin) throw new Error('Supabase admin client not initialized');
   return supabaseAdmin;
 }
+// Helper functions to convert database types
+function toUser(data: any): User {
+  return {
+    id: data.id,
+    username: data.username,
+    email: data.email,
+    password: data.password,
+    name: data.name,
+    role: data.role,
+    status: data.status,
+    userType: data.userType,
+    emailVerified: data.emailVerified,
+    verified: data.verified,
+    following: data.following || [],
+    createdAt: data.createdAt,
+    bio: data.bio,
+    avatar: data.avatar,
+    backgroundPicture: data.backgroundPicture,
+    country: data.country,
+    city: data.city,
+  };
+}
+
 export const db = {
   users: {
     getAll: async (): Promise<User[]> => {
