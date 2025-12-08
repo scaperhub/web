@@ -3,8 +3,9 @@ import path from 'path';
 import { User, Category, Item, Message, Conversation, OTP } from './types';
 import { db as supabaseDb } from './db-supabase';
 
-const USE_SUPABASE = process.env.USE_SUPABASE === 'true' || 
-                     (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+const USE_SUPABASE =
+  process.env.USE_SUPABASE === 'true' ||
+  (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
 function createDb(): typeof supabaseDb {
   if (USE_SUPABASE) {
@@ -17,6 +18,7 @@ function createDb(): typeof supabaseDb {
   }
 
   const getFilePath = (filename: string) => path.join(dataDir, filename);
+
   const readFile = <T>(filename: string): T[] => {
     const filePath = getFilePath(filename);
     if (!fs.existsSync(filePath)) return [];
@@ -26,9 +28,11 @@ function createDb(): typeof supabaseDb {
       return [];
     }
   };
+
   const writeFile = <T>(filename: string, data: T[]): void => {
     fs.writeFileSync(getFilePath(filename), JSON.stringify(data, null, 2));
   };
+
   const updateUserDirect = (id: string, updates: Partial<User>): void => {
     const users = readFile<User>('users.json');
     const index = users.findIndex(u => u.id === id);
@@ -38,7 +42,7 @@ function createDb(): typeof supabaseDb {
     }
   };
 
-  return {
+  const dbJson: typeof supabaseDb = {
     users: {
       getAll: async () => readFile<User>('users.json'),
       getByEmail: async (email: string) => {
@@ -46,7 +50,8 @@ function createDb(): typeof supabaseDb {
         const user = users.find(u => u.email === email);
         if (user) {
           const u = user as any;
-          if (!('status' in u)) updateUserDirect(user.id, { status: 'approved', emailVerified: true });
+          if (!('status' in u))
+            updateUserDirect(user.id, { status: 'approved', emailVerified: true });
           if (!('username' in u) || !u.username) {
             const base = user.email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '');
             let username = base;
@@ -66,7 +71,8 @@ function createDb(): typeof supabaseDb {
         const user = users.find(u => u.id === id);
         if (user) {
           const u = user as any;
-          if (!('status' in u)) updateUserDirect(user.id, { status: 'approved', emailVerified: true });
+          if (!('status' in u))
+            updateUserDirect(user.id, { status: 'approved', emailVerified: true });
           if (!('username' in u) || !u.username) {
             const base = user.email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '');
             let username = base;
@@ -86,7 +92,8 @@ function createDb(): typeof supabaseDb {
         const user = users.find(u => u.username === username);
         if (user) {
           const u = user as any;
-          if (!('status' in u)) updateUserDirect(user.id, { status: 'approved', emailVerified: true });
+          if (!('status' in u))
+            updateUserDirect(user.id, { status: 'approved', emailVerified: true });
           if (!('verified' in u)) updateUserDirect(user.id, { verified: false });
           if (!('userType' in u)) updateUserDirect(user.id, { userType: 'hobbyist' });
           if (!('following' in u)) updateUserDirect(user.id, { following: [] });
@@ -107,9 +114,32 @@ function createDb(): typeof supabaseDb {
         writeFile('users.json', users);
         return users[index];
       },
+      delete: async (id: string): Promise<boolean> => {
+        const users = readFile<User>('users.json');
+        const items = readFile<Item>('items.json');
+        const messages = readFile<Message>('messages.json');
+        const conversations = readFile<Conversation>('conversations.json');
+
+        writeFile('items.json', items.filter(i => i.sellerId !== id));
+        writeFile(
+          'conversations.json',
+          conversations.filter(c => c.buyerId !== id && c.sellerId !== id)
+        );
+        writeFile(
+          'messages.json',
+          messages.filter(m => m.senderId !== id && m.receiverId !== id)
+        );
+        writeFile('otps.json', readFile<OTP>('otps.json').filter(o => o.email !== users.find(u => u.id === id)?.email));
+        const filteredUsers = users.filter(u => u.id !== id);
+        if (filteredUsers.length === users.length) return false;
+        writeFile('users.json', filteredUsers);
+        return true;
+      },
+    },
     categories: {
       getAll: async () => readFile<Category>('categories.json'),
-      getById: async (id: string) => readFile<Category>('categories.json').find(c => c.id === id),
+      getById: async (id: string) =>
+        readFile<Category>('categories.json').find(c => c.id === id),
       create: async (category: Category) => {
         const categories = readFile<Category>('categories.json');
         categories.push(category);
@@ -137,11 +167,18 @@ function createDb(): typeof supabaseDb {
         const items = readFile<Item>('items.json');
         const migrated = items.map((item: any) => {
           if (!('approvalStatus' in item)) item.approvalStatus = 'approved';
+          if (!('quantity' in item)) item.quantity = 1;
+          return item as Item;
         });
+        if (migrated.some((item: any, i) => item !== items[i])) writeFile('items.json', migrated);
+        return migrated;
       },
-      getById: async (id: string) => readFile<Item>('items.json').find(i => i.id === id),
-      getBySeller: async (sellerId: string) => readFile<Item>('items.json').filter(i => i.sellerId === sellerId),
-      getByCategory: async (categoryId: string) => readFile<Item>('items.json').filter(i => i.categoryId === categoryId),
+      getById: async (id: string) =>
+        readFile<Item>('items.json').find(i => i.id === id),
+      getBySeller: async (sellerId: string) =>
+        readFile<Item>('items.json').filter(i => i.sellerId === sellerId),
+      getByCategory: async (categoryId: string) =>
+        readFile<Item>('items.json').filter(i => i.categoryId === categoryId),
       create: async (item: Item) => {
         const items = readFile<Item>('items.json');
         items.push(item);
@@ -165,6 +202,53 @@ function createDb(): typeof supabaseDb {
       },
     },
     messages: {
+      getAll: async () => readFile<Message>('messages.json'),
+      getById: async (id: string) =>
+        readFile<Message>('messages.json').find(m => m.id === id),
+      getByConversation: async (conversationId: string) =>
+        readFile<Message>('messages.json')
+          .filter(m => m.conversationId === conversationId)
+          .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()),
+      create: async (message: Message) => {
+        const messages = readFile<Message>('messages.json');
+        messages.push(message);
+        writeFile('messages.json', messages);
+        return message;
+      },
+      update: async (id: string, updates: Partial<Message>) => {
+        const messages = readFile<Message>('messages.json');
+        const index = messages.findIndex(m => m.id === id);
+        if (index === -1) return null;
+        messages[index] = { ...messages[index], ...updates };
+        writeFile('messages.json', messages);
+        return messages[index];
+      },
+      delete: async (id: string) => {
+        const messages = readFile<Message>('messages.json');
+        const filtered = messages.filter(m => m.id !== id);
+        if (filtered.length === messages.length) return false;
+        writeFile('messages.json', filtered);
+        return true;
+      },
+    },
+    conversations: {
+      getAll: async () => readFile<Conversation>('conversations.json'),
+      getByUser: async (userId: string): Promise<Conversation[]> =>
+        readFile<Conversation>('conversations.json').filter(
+          c => c.buyerId === userId || c.sellerId === userId
+        ),
+      getById: async (id: string) =>
+        readFile<Conversation>('conversations.json').find(c => c.id === id),
+      getByItemAndBuyer: async (
+        itemId: string,
+        buyerId: string
+      ): Promise<Conversation | undefined> =>
+        readFile<Conversation>('conversations.json').find(
+          c => c.itemId === itemId && c.buyerId === buyerId
+        ),
+      create: async (conversation: Conversation) => {
+        const conversations = readFile<Conversation>('conversations.json');
+        conversations.push(conversation);
         writeFile('conversations.json', conversations);
         return conversation;
       },
@@ -176,14 +260,23 @@ function createDb(): typeof supabaseDb {
         writeFile('conversations.json', conversations);
         return conversations[index];
       },
+      delete: async (id: string) => {
+        const messages = readFile<Message>('messages.json');
+        writeFile('messages.json', messages.filter(m => m.conversationId !== id));
+        const conversations = readFile<Conversation>('conversations.json');
+        const filtered = conversations.filter(c => c.id !== id);
+        if (filtered.length === conversations.length) return false;
+        writeFile('conversations.json', filtered);
+        return true;
+      },
     },
     otps: {
       getAll: async () => readFile<OTP>('otps.json'),
       getByEmail: async (email: string) => {
         const otps = readFile<OTP>('otps.json').filter(o => o.email === email);
-        return otps.length === 0 ? undefined : otps.sort((a, b) => 
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        )[0];
+        return otps.length === 0
+          ? undefined
+          : otps.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
       },
       create: async (otp: OTP) => {
         const otps = readFile<OTP>('otps.json').filter(o => o.email !== otp.email);
@@ -199,9 +292,9 @@ function createDb(): typeof supabaseDb {
         writeFile('otps.json', readFile<OTP>('otps.json').filter(o => new Date(o.expiresAt) > now));
       },
     },
-  },
+  };
+
+  return dbJson;
 }
-  }
 
-
-export const db = createDb() as unknown as typeof supabaseDb;
+export const db = createDb() as any;
