@@ -334,7 +334,7 @@ export default function Register({ user, onLogin, onLogout, onOpenSellSheet }: R
           <form onSubmit={handleVerifyOTP} className="space-y-6">
             <div>
               <p className="text-sm text-gray-600 mb-4">
-                We've sent a 6-digit OTP code to <strong>{email}</strong>. Please enter it below to verify your email.
+                We&apos;ve sent a 6-digit OTP code to <strong>{email}</strong>. Please enter it below to verify your email.
               </p>
               <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-2">
                 OTP Code

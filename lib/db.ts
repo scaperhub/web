@@ -28,6 +28,30 @@ function createDb(): typeof supabaseDb {
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
   const f = (name: string) => path.join(dataDir, name);
 
+  const ensureItemsMigrated = () => {
+    const items = readJson<Item>(f('items.json'));
+    let changed = false;
+
+    const migrated = items.map(item => {
+      const updated = { ...item };
+      if (updated.approvalStatus === undefined) {
+        updated.approvalStatus = 'approved';
+        changed = true;
+      }
+      if (updated.quantity === undefined) {
+        updated.quantity = 1;
+        changed = true;
+      }
+      return updated;
+    });
+
+    if (changed) {
+      writeJson(f('items.json'), migrated);
+    }
+
+    return migrated;
+  };
+
   const dbJson = {
     users: {
       getAll: async () => readJson<User>(f('users.json')),
@@ -97,20 +121,12 @@ function createDb(): typeof supabaseDb {
     },
     items: {
       getAll: async () => {
-        const items = readJson<Item>(f('items.json'));
-        const migrated = items.map(it => {
-          const item: any = { ...it };
-          if (!('approvalStatus' in item)) item.approvalStatus = 'approved';
-          if (!('quantity' in item)) item.quantity = 1;
-          return item as Item;
-        });
-        if (migrated.some((it, i) => it !== items[i])) writeJson(f('items.json'), migrated);
-        return migrated;
+        return ensureItemsMigrated();
       },
-      getById: async (id: string) => readJson<Item>(f('items.json')).find(i => i.id === id),
-      getBySeller: async (sellerId: string) => readJson<Item>(f('items.json')).filter(i => i.sellerId === sellerId),
+      getById: async (id: string) => ensureItemsMigrated().find(i => i.id === id),
+      getBySeller: async (sellerId: string) => ensureItemsMigrated().filter(i => i.sellerId === sellerId),
       getByCategory: async (categoryId: string) =>
-        readJson<Item>(f('items.json')).filter(i => i.categoryId === categoryId),
+        ensureItemsMigrated().filter(i => i.categoryId === categoryId),
       create: async (item: Item) => {
         const items = readJson<Item>(f('items.json'));
         items.push(item);

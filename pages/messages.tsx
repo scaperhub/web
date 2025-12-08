@@ -295,3 +295,8 @@ export default function Messages({ user, onLogout, onOpenSellSheet }: MessagesPr
   );
 }
 
+// Force server-side rendering to avoid static pre-render errors at build time
+export async function getServerSideProps() {
+  return { props: {} };
+}
+

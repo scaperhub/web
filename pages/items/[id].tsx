@@ -371,3 +371,8 @@ export default function ItemDetail({ user, onLogout, onOpenSellSheet, onOpenEdit
   );
 }
 
+// Force server-side rendering to avoid build-time path collection for dynamic route
+export async function getServerSideProps() {
+  return { props: {} };
+}
+

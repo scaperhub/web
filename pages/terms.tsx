@@ -23,7 +23,7 @@ export default function Terms({ user, onLogout, onOpenSellSheet }: TermsProps) {
           <section>
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Acceptance of Terms</h2>
             <p className="text-gray-700 leading-relaxed">
-              By accessing and using ScaperHub. ("the Platform"), you accept and agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use our Platform.
+              By accessing and using ScaperHub. (&quot;the Platform&quot;), you accept and agree to be bound by these Terms of Service (&quot;Terms&quot;). If you do not agree to these Terms, please do not use our Platform.
             </p>
           </section>
 
@@ -123,7 +123,7 @@ export default function Terms({ user, onLogout, onOpenSellSheet }: TermsProps) {
           <section>
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">9. Disclaimers and Limitation of Liability</h2>
             <p className="text-gray-700 leading-relaxed mb-4">
-              THE PLATFORM IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND. WE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+              THE PLATFORM IS PROVIDED &quot;AS IS&quot; AND &quot;AS AVAILABLE&quot; WITHOUT WARRANTIES OF ANY KIND. WE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
             </p>
             <p className="text-gray-700 leading-relaxed">
               TO THE MAXIMUM EXTENT PERMITTED BY LAW, WE SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF YOUR USE OF THE PLATFORM.
@@ -147,7 +147,7 @@ export default function Terms({ user, onLogout, onOpenSellSheet }: TermsProps) {
           <section>
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">12. Changes to Terms</h2>
             <p className="text-gray-700 leading-relaxed">
-              We reserve the right to modify these Terms at any time. We will notify users of material changes by posting the updated Terms on this page and updating the "Last updated" date. Your continued use of the Platform after such changes constitutes acceptance of the modified Terms.
+              We reserve the right to modify these Terms at any time. We will notify users of material changes by posting the updated Terms on this page and updating the &quot;Last updated&quot; date. Your continued use of the Platform after such changes constitutes acceptance of the modified Terms.
             </p>
           </section>
 

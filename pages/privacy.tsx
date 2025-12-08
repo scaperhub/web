@@ -23,7 +23,7 @@ export default function Privacy({ user, onLogout, onOpenSellSheet }: PrivacyProp
           <section>
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Introduction</h2>
             <p className="text-gray-700 leading-relaxed">
-              Welcome to ScaperHub. ("we," "our," or "us"). We are committed to protecting your privacy and ensuring you have a positive experience on our platform. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our marketplace.
+              Welcome to ScaperHub. (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;). We are committed to protecting your privacy and ensuring you have a positive experience on our platform. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our marketplace.
             </p>
           </section>
 
@@ -107,7 +107,7 @@ export default function Privacy({ user, onLogout, onOpenSellSheet }: PrivacyProp
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">8. Children's Privacy</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">8. Children&apos;s Privacy</h2>
             <p className="text-gray-700 leading-relaxed">
               Our platform is not intended for individuals under the age of 18. We do not knowingly collect personal information from children.
             </p>
@@ -116,7 +116,7 @@ export default function Privacy({ user, onLogout, onOpenSellSheet }: PrivacyProp
           <section>
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">9. Changes to This Privacy Policy</h2>
             <p className="text-gray-700 leading-relaxed">
-              We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date.
+              We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the &quot;Last updated&quot; date.
             </p>
           </section>
 

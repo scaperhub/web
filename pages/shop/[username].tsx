@@ -89,7 +89,7 @@ export default function ShopProfile({ user, onLogout, onOpenSellSheet, onOpenEdi
         console.error(err);
         setLoading(false);
       });
-  }, [username, router]);
+  }, [username, router, user]);
 
   if (loading) {
     return (

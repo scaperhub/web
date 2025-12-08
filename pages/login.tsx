@@ -112,7 +112,7 @@ export default function Login({ user, onLogin, onLogout, onOpenSellSheet }: Logi
             </button>
           </form>
           <p className="mt-6 text-center text-sm text-gray-500">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link href="/register" className="text-gray-900 font-medium hover:underline">
               Sign up
             </Link>
