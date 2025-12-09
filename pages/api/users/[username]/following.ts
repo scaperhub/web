@@ -22,15 +22,11 @@ export default async function handler(
     return res.status(404).json({ error: 'User not found' });
   }
 
-  // Get all users that this user follows
-  const allUsers = await db.users.getAll();
+  const allUsers = (await db.users.getAll()) as User[];
   const following = (profileUser.following || [])
-    .map(id => allUsers.find(u => u.id === id))
-    .filter((user): user is User => user !== undefined)
-    .map(({ password, ...user }) => user); // Remove passwords
+    .map((id: string) => allUsers.find((u: User) => u.id === id))
+    .filter((user: User | undefined): user is User => user !== undefined)
+    .map(({ password, ...user }: User) => user); // Remove passwords
 
   return res.status(200).json({ following });
 }
-
-
-

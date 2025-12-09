@@ -34,18 +34,6 @@ export default async function handler(
     }
 
     const updates = req.body;
-    
-    // When a non-admin owner edits their item, reset approval status to 'pending'
-    // This ensures edited items go through the approval process again
-    if (item.sellerId === user.id && user.role !== 'admin') {
-      // Force approval status to 'pending' for non-admin owners
-      updates.approvalStatus = 'pending';
-    } else if (item.sellerId === user.id && user.role === 'admin') {
-      // Admin editing their own item keeps it approved (they can approve themselves)
-      updates.approvalStatus = updates.approvalStatus || item.approvalStatus || 'approved';
-    }
-    // If admin is editing someone else's item, they can set approvalStatus explicitly via the request body
-    
     const updated = await db.items.update(id as string, {
       ...updates,
       updatedAt: new Date().toISOString(),

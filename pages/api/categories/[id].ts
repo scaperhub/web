@@ -39,7 +39,7 @@ export default async function handler(
       updates.subcategories = subcategories.map((sub: { name: string; description?: string; id?: string }) => {
         if (sub.id) {
           // Update existing subcategory
-          const existing = category.subcategories.find(s => s.id === sub.id);
+          const existing = category.subcategories.find((s: any) => s.id === sub.id);
           if (existing) {
             return { ...existing, name: sub.name, description: sub.description };
           }

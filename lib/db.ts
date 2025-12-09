@@ -1,7 +1,6 @@
 // Clean JSON-backed db implementation mirroring supabase shape.
 import fs from 'fs';
 import path from 'path';
-import { db as supabaseDb } from './db-supabase';
 import { User, Category, Item, Message, Conversation, OTP } from './types';
 
 const USE_SUPABASE =
@@ -21,8 +20,13 @@ function writeJson<T>(p: string, data: T[]) {
   fs.writeFileSync(p, JSON.stringify(data, null, 2));
 }
 
-function createDb(): typeof supabaseDb {
-  if (USE_SUPABASE) return supabaseDb;
+function createDb(): any {
+  // Only load Supabase DB when configured to avoid throwing on import
+  if (USE_SUPABASE) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { db: supabaseDb } = require('./db-supabase');
+    return supabaseDb;
+  }
 
   const dataDir = path.join(process.cwd(), 'data');
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
@@ -252,9 +256,9 @@ function createDb(): typeof supabaseDb {
         );
       },
     },
-  } as unknown as typeof supabaseDb;
+  };
 
-  return dbJson;
+  return dbJson as any;
 }
 
 export const db: any = createDb();

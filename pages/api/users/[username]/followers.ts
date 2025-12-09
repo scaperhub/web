@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db';
+import { User } from '@/lib/types';
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,14 +22,10 @@ export default async function handler(
     return res.status(404).json({ error: 'User not found' });
   }
 
-  // Get all users and find who follows this user
-  const allUsers = await db.users.getAll();
+  const allUsers = (await db.users.getAll()) as User[];
   const followers = allUsers
-    .filter(u => u.following && u.following.includes(profileUser.id))
-    .map(({ password, ...user }) => user); // Remove passwords
+    .filter((u: User) => u.following && u.following.includes(profileUser.id))
+    .map(({ password, ...user }: User) => user); // Remove passwords
 
   return res.status(200).json({ followers });
 }
-
-
-

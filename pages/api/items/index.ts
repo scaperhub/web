@@ -13,11 +13,11 @@ export default async function handler(
 
   if (req.method === 'GET') {
     const { categoryId, sellerId, status, approvalStatus } = req.query;
-    let items = await db.items.getAll();
+    let items: Item[] = await db.items.getAll();
 
     // Filter by approvalStatus: non-admins only see approved items (except their own)
     if (!user || user.role !== 'admin') {
-      items = items.filter(i => {
+      items = items.filter((i: Item) => {
         // Always show approved items
         if (i.approvalStatus === 'approved') return true;
         // Show pending/rejected items only if user is viewing their own items
@@ -28,17 +28,17 @@ export default async function handler(
       });
     } else if (approvalStatus) {
       // Admin can filter by approvalStatus if specified
-      items = items.filter(i => i.approvalStatus === approvalStatus);
+      items = items.filter((i: Item) => i.approvalStatus === approvalStatus);
     }
 
     if (categoryId) {
-      items = items.filter(i => i.categoryId === categoryId);
+      items = items.filter((i: Item) => i.categoryId === categoryId);
     }
     if (sellerId) {
-      items = items.filter(i => i.sellerId === sellerId);
+      items = items.filter((i: Item) => i.sellerId === sellerId);
     }
     if (status) {
-      items = items.filter(i => i.status === status);
+      items = items.filter((i: Item) => i.status === status);
     }
 
     // Sort by newest first
@@ -83,10 +83,14 @@ export default async function handler(
       condition,
     };
 
-    await db.items.create(item);
-    return res.status(201).json({ item });
+    // If admin, auto-approve
+    if (user.role === 'admin') {
+      item.approvalStatus = 'approved';
+    }
+
+    const createdItem = await db.items.create(item);
+    return res.status(201).json({ item: createdItem });
   }
 
   return res.status(405).json({ error: 'Method not allowed' });
 }
-

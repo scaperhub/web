@@ -48,12 +48,6 @@ export default async function handler(
         status: 'rejected',
       });
     }
-    if (user.status === 'suspended') {
-      return res.status(403).json({ 
-        error: 'Your account has been suspended. Please contact support.',
-        status: 'suspended',
-      });
-    }
   }
 
   const token = generateToken(user);

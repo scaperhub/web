@@ -112,24 +112,5 @@
     "condition": "used",
     "approvalStatus": "approved",
     "quantity": 1
-  },
-  {
-    "id": "1765049474936-82f88c3nh",
-    "title": "ADA La Plata Sand",
-    "description": "8kg",
-    "price": 1000,
-    "images": [
-      "https://aquabynature-shop.com/3336-large_default/ada-laplata-sand-8-kg.jpg"
-    ],
-    "categoryId": "1765026738007-5pcsnxk8v",
-    "subcategoryId": "1765029203028-z5hhdhgjp",
-    "sellerId": "1765030717587-2bw9llmv6",
-    "status": "available",
-    "approvalStatus": "approved",
-    "createdAt": "2025-12-06T19:31:14.936Z",
-    "updatedAt": "2025-12-06T19:32:03.786Z",
-    "location": "Bengaluru",
-    "condition": "used",
-    "quantity": 1
   }
 ]

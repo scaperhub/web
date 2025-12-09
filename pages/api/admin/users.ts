@@ -20,10 +20,10 @@ export default async function handler(
 
   if (req.method === 'GET') {
     const { status } = req.query;
-    const allUsers = await db.users.getAll();
+    const allUsers = (await db.users.getAll()) as User[];
 
     // Remove passwords
-    let users = allUsers.map(({ password, ...user }) => user) as Omit<User, 'password'>[];
+    let users: Omit<User, 'password'>[] = allUsers.map(({ password, ...user }: User) => user);
 
     if (status) {
       users = users.filter(u => u.status === status);

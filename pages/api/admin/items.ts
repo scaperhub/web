@@ -16,11 +16,12 @@ export default async function handler(
 
   if (req.method === 'GET') {
     const { approvalStatus } = req.query;
-    let items = await db.items.getAll();
+    const statusFilter = Array.isArray(approvalStatus) ? approvalStatus[0] : approvalStatus;
+    let items: Item[] = await db.items.getAll();
 
     // Filter by approvalStatus if specified
-    if (approvalStatus) {
-      items = items.filter(i => i.approvalStatus === approvalStatus);
+    if (statusFilter) {
+      items = items.filter((i: Item) => i.approvalStatus === statusFilter);
     }
 
     // Sort by newest first
@@ -54,6 +55,3 @@ export default async function handler(
 
   return res.status(405).json({ error: 'Method not allowed' });
 }
-
-
-
