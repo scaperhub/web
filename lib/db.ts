@@ -38,14 +38,14 @@ function loadSupabaseDb(): any {
     (supabaseExport as any)?.default ||
     supabaseExport;
 
-  if (!supabaseDb || !(supabaseDb as any).items) {
+  if (!supabaseDb) {
     const envInfo = {
       hasUrl,
       hasAnon,
       hasService: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
     };
     throw new Error(
-      `Supabase db failed to initialize (missing items collection). Env: ${JSON.stringify(envInfo)}`
+      `Supabase db failed to initialize (no export found). Env: ${JSON.stringify(envInfo)}`
     );
   }
 
