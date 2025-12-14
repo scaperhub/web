@@ -3,10 +3,9 @@ import fs from 'fs';
 import path from 'path';
 import { User, Category, Item, Message, Conversation, OTP } from './types';
 
-const USE_SUPABASE =
-  process.env.USE_SUPABASE === 'true' ||
-  process.env.VERCEL === '1' ||
-  process.env.NODE_ENV === 'production';
+const isProdLike = process.env.VERCEL === '1' || process.env.NODE_ENV === 'production';
+const isSupabaseForced = process.env.USE_SUPABASE === 'true';
+const preferJsonLocal = !isProdLike && process.env.USE_SUPABASE !== 'true';
 
 function readJson<T>(p: string): T[] {
   if (!fs.existsSync(p)) return [];
@@ -290,10 +289,12 @@ function createJsonDb(): any {
 }
 
 function createDb(): any {
-  if (USE_SUPABASE) {
+  // In Vercel / production (or when explicitly forced), require Supabase.
+  if (!preferJsonLocal) {
     return loadSupabaseDb();
   }
 
+  // Local development default: JSON-backed storage.
   return createJsonDb();
 }
 
