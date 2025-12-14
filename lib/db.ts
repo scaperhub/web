@@ -2,7 +2,6 @@
 import fs from 'fs';
 import path from 'path';
 import { User, Category, Item, Message, Conversation, OTP } from './types';
-import supabaseExport from './db-supabase';
 
 const USE_SUPABASE =
   process.env.USE_SUPABASE === 'true' ||
@@ -24,8 +23,24 @@ function writeJson<T>(p: string, data: T[]) {
 function createDb(): any {
   // Only load Supabase DB when configured; on failure, throw (no JSON fallback in prod)
   if (USE_SUPABASE) {
+    const hasUrl = !!process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const hasAnon = !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!hasUrl || !hasAnon) {
+      throw new Error(
+        'USE_SUPABASE is enabled, but NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY are missing.'
+      );
+    }
+
+    // IMPORTANT: load lazily so local dev can run without env vars.
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const supabaseExport = require('./db-supabase');
+
     const supabaseDb =
-      (supabaseExport as any)?.db || (supabaseExport as any)?.default?.db || (supabaseExport as any)?.default || supabaseExport;
+      (supabaseExport as any)?.db ||
+      (supabaseExport as any)?.default?.db ||
+      (supabaseExport as any)?.default ||
+      supabaseExport;
     try {
       if (!supabaseDb || !(supabaseDb as any).items) {
         const envInfo = {

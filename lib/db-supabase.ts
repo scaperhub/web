@@ -2,21 +2,29 @@ import { supabase, supabaseAdmin } from './supabase';
 import { User, Category, Item, Message, Conversation, OTP } from './types';
 
 
-// Check if Supabase is properly configured
-const isSupabaseConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+function assertSupabaseConfigured() {
+  const hasUrl = !!process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const hasAnon = !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-if (!isSupabaseConfigured) {
-  throw new Error('Supabase is not configured. This module should only be used when USE_SUPABASE is true.');
+  if (!hasUrl || !hasAnon) {
+    // Important: do NOT throw at import-time; only throw when actually used.
+    // This keeps local dev usable and allows graceful error handling in API routes.
+    throw new Error(
+      'Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY (and optionally SUPABASE_SERVICE_ROLE_KEY).'
+    );
+  }
 }
 
 // Helper to ensure supabase is not null
 function getSupabase() {
+  assertSupabaseConfigured();
   if (!supabase) throw new Error('Supabase client not initialized');
   return supabase;
 }
 
 // Helper to ensure supabaseAdmin is not null
 function getSupabaseAdmin() {
+  assertSupabaseConfigured();
   if (!supabaseAdmin) throw new Error('Supabase admin client not initialized');
   return supabaseAdmin;
 }
