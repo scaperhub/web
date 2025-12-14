@@ -408,45 +408,5 @@
     "content": "Is this working?",
     "createdAt": "2025-12-12T13:58:42.900Z",
     "read": true
-  },
-  {
-    "id": "1765686359608-pm1ay7q6f",
-    "conversationId": "1765686359608-fw957lwf7",
-    "senderId": "test-user-001",
-    "receiverId": "1765026595778-xp0j7jnmu",
-    "itemId": "1765027013553-0ubzcs4mp",
-    "content": "I'm interested in this listing.",
-    "createdAt": "2025-12-14T04:25:59.608Z",
-    "read": false
-  },
-  {
-    "id": "1765686382504-y968z55wv",
-    "conversationId": "1765686359608-fw957lwf7",
-    "senderId": "test-user-001",
-    "receiverId": "1765026595778-xp0j7jnmu",
-    "itemId": "1765027013553-0ubzcs4mp",
-    "content": "Hi seller",
-    "createdAt": "2025-12-14T04:26:22.504Z",
-    "read": false
-  },
-  {
-    "id": "1765686424676-w1mylxkdu",
-    "conversationId": "1765686424675-oh6o7sb9w",
-    "senderId": "test-user-001",
-    "receiverId": "test-seller-001",
-    "itemId": "1765686411247-s8rgfvs4o",
-    "content": "I'm interested in this listing.",
-    "createdAt": "2025-12-14T04:27:04.675Z",
-    "read": false
-  },
-  {
-    "id": "1765686432136-3gt0wdpo7",
-    "conversationId": "1765686424675-oh6o7sb9w",
-    "senderId": "test-user-001",
-    "receiverId": "test-seller-001",
-    "itemId": "1765686411247-s8rgfvs4o",
-    "content": "Hello seller",
-    "createdAt": "2025-12-14T04:27:12.136Z",
-    "read": false
   }
 ]

@@ -58,43 +58,5 @@
     "country": "IN",
     "city": "Bangalore",
     "lastSeen": "2025-12-12T13:59:29.784Z"
-  },
-  {
-    "id": "test-user-001",
-    "username": "qauser",
-    "email": "qa@example.com",
-    "password": "$2a$10$WWV3H.o9BEwYOngRPZNVQegY5mmBUDLu7iTGLWw1f.25h3X63zQGy",
-    "name": "QA User",
-    "role": "user",
-    "status": "approved",
-    "userType": "hobbyist",
-    "emailVerified": true,
-    "verified": false,
-    "following": [],
-    "createdAt": "2025-12-13T00:00:00.000Z",
-    "country": "IN",
-    "city": "Bangalore",
-    "lastSeen": "2025-12-13T00:00:00.000Z",
-    "avatar": "",
-    "backgroundPicture": ""
-  },
-  {
-    "id": "test-seller-001",
-    "username": "qaseller",
-    "email": "qaseller@example.com",
-    "password": "$2a$10$WWV3H.o9BEwYOngRPZNVQegY5mmBUDLu7iTGLWw1f.25h3X63zQGy",
-    "name": "QA Seller",
-    "role": "user",
-    "status": "approved",
-    "userType": "shop",
-    "emailVerified": true,
-    "verified": false,
-    "following": [],
-    "createdAt": "2025-12-13T00:00:00.000Z",
-    "country": "IN",
-    "city": "Bangalore",
-    "lastSeen": "2025-12-13T00:00:00.000Z",
-    "avatar": "",
-    "backgroundPicture": ""
   }
 ]

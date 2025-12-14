@@ -131,22 +131,5 @@
     "updatedAt": "2025-12-12T12:59:30.678Z",
     "location": "Bangalore, India",
     "condition": "used"
-  },
-  {
-    "id": "1765686411247-s8rgfvs4o",
-    "title": "QA Test Item",
-    "description": "Test item for chat flows",
-    "price": 1000,
-    "quantity": 1,
-    "images": [],
-    "categoryId": "1765026738007-5pcsnxk8v",
-    "subcategoryId": "1765028982617-tigossnai",
-    "sellerId": "test-seller-001",
-    "status": "available",
-    "approvalStatus": "approved",
-    "createdAt": "2025-12-14T04:26:51.247Z",
-    "updatedAt": "2025-12-14T04:27:24.717Z",
-    "location": "Bangalore",
-    "condition": "used"
   }
 ]

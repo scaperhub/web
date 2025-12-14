@@ -48,25 +48,5 @@
     "updatedAt": "2025-12-12T13:58:42.901Z",
     "lastMessage": "Is this working?",
     "lastMessageAt": "2025-12-12T13:58:42.901Z"
-  },
-  {
-    "id": "1765686359608-fw957lwf7",
-    "itemId": "1765027013553-0ubzcs4mp",
-    "buyerId": "test-user-001",
-    "sellerId": "1765026595778-xp0j7jnmu",
-    "createdAt": "2025-12-14T04:25:59.608Z",
-    "updatedAt": "2025-12-14T04:26:22.505Z",
-    "lastMessage": "Hi seller",
-    "lastMessageAt": "2025-12-14T04:26:22.505Z"
-  },
-  {
-    "id": "1765686424675-oh6o7sb9w",
-    "itemId": "1765686411247-s8rgfvs4o",
-    "buyerId": "test-user-001",
-    "sellerId": "test-seller-001",
-    "createdAt": "2025-12-14T04:27:04.675Z",
-    "updatedAt": "2025-12-14T04:27:12.136Z",
-    "lastMessage": "Hello seller",
-    "lastMessageAt": "2025-12-14T04:27:12.136Z"
   }
 ]
