@@ -21,15 +21,13 @@ function writeJson<T>(p: string, data: T[]) {
 }
 
 function createDb(): any {
-  // Only load Supabase DB when configured; if it fails, fall back to JSON DB
+  // Only load Supabase DB when configured; on failure, throw (no JSON fallback in prod)
   if (USE_SUPABASE) {
-    try {
-      const { db: supabaseDb } = require('./db-supabase');
-      if (supabaseDb?.items) return supabaseDb;
-      console.error('Supabase db loaded but missing items collection, falling back to JSON db');
-    } catch (err) {
-      console.error('Failed to initialize Supabase db, falling back to JSON db', err);
+    const { db: supabaseDb } = require('./db-supabase');
+    if (!supabaseDb || !supabaseDb.items) {
+      throw new Error('Supabase db failed to initialize (missing items collection). Check Supabase env vars.');
     }
+    return supabaseDb;
   }
 
   const dataDir = path.join(process.cwd(), 'data');
