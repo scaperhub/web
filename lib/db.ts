@@ -2,7 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import { User, Category, Item, Message, Conversation, OTP } from './types';
-import { db as supabaseDb } from './db-supabase';
+import supabaseExport from './db-supabase';
 
 const USE_SUPABASE =
   process.env.USE_SUPABASE === 'true' ||
@@ -24,6 +24,8 @@ function writeJson<T>(p: string, data: T[]) {
 function createDb(): any {
   // Only load Supabase DB when configured; on failure, throw (no JSON fallback in prod)
   if (USE_SUPABASE) {
+    const supabaseDb =
+      (supabaseExport as any)?.db || (supabaseExport as any)?.default?.db || (supabaseExport as any)?.default || supabaseExport;
     try {
       if (!supabaseDb || !(supabaseDb as any).items) {
         const envInfo = {
