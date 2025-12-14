@@ -2,6 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import { User, Category, Item, Message, Conversation, OTP } from './types';
+import * as supabaseModule from './db-supabase';
 
 const USE_SUPABASE =
   process.env.USE_SUPABASE === 'true' ||
@@ -24,8 +25,11 @@ function createDb(): any {
   // Only load Supabase DB when configured; on failure, throw (no JSON fallback in prod)
   if (USE_SUPABASE) {
     try {
-      const supabaseModule = require('./db-supabase');
-      const supabaseDb = supabaseModule.db || supabaseModule.default?.db || supabaseModule.default || supabaseModule;
+      const supabaseDb =
+        (supabaseModule as any)?.db ||
+        (supabaseModule as any)?.default?.db ||
+        (supabaseModule as any)?.default ||
+        (supabaseModule as any);
       if (!supabaseDb || !supabaseDb.items) {
         const keys = Object.keys(supabaseModule || {});
         const envInfo = {
