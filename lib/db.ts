@@ -1,7 +1,7 @@
 // Hybrid DB: Supabase in production/server, JSON files for local dev.
 import fs from 'fs';
 import path from 'path';
-import { db as supabaseDb } from './db-supabase';
+import * as supabaseModule from './db-supabase';
 import { User, Category, Item, Message, Conversation, OTP } from './types';
 
 const isProdLike = process.env.VERCEL === '1' || process.env.NODE_ENV === 'production';
@@ -31,18 +31,28 @@ function loadSupabaseDb(): any {
     );
   }
 
-  if (!supabaseDb) {
+  const candidate =
+    (supabaseModule as any)?.db ||
+    (supabaseModule as any)?.default?.db ||
+    (supabaseModule as any)?.default ||
+    supabaseModule;
+
+  const keys = candidate ? Object.keys(candidate) : [];
+
+  if (!candidate || !candidate.categories || !candidate.items) {
     const envInfo = {
       hasUrl,
       hasAnon,
       hasService: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+      moduleKeys: Object.keys(supabaseModule || {}),
+      candidateKeys: keys,
     };
     throw new Error(
-      `Supabase db failed to initialize (no export). Env: ${JSON.stringify(envInfo)}`
+      `Supabase db failed to initialize (missing categories/items). Env: ${JSON.stringify(envInfo)}`
     );
   }
 
-  return supabaseDb as any;
+  return candidate as any;
 }
 
 function createJsonDb(): any {
