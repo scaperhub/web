@@ -17,7 +17,18 @@ export default async function handler(
     const sellerId = Array.isArray(q.sellerId) ? q.sellerId[0] : q.sellerId;
     const status = Array.isArray(q.status) ? q.status[0] : q.status;
     const approvalStatus = Array.isArray(q.approvalStatus) ? q.approvalStatus[0] : q.approvalStatus;
+    const debug = (Array.isArray(q.debug) ? q.debug[0] : q.debug) === '1';
+
     let items: Item[] = await db.items.getAll();
+    const debugBefore = debug
+      ? {
+          total: items.length,
+          approved: items.filter(i => i.approvalStatus === 'approved').length,
+          pending: items.filter(i => i.approvalStatus === 'pending').length,
+          available: items.filter(i => i.status === 'available').length,
+          sample: items.slice(0, 3),
+        }
+      : undefined;
 
     // Filter by approvalStatus: non-admins only see approved items (except their own)
     if (!user || user.role !== 'admin') {
@@ -51,7 +62,17 @@ export default async function handler(
     // Sort by newest first
     items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-    return res.status(200).json({ items });
+    const debugAfter = debug
+      ? {
+          total: items.length,
+          approved: items.filter(i => i.approvalStatus === 'approved').length,
+          pending: items.filter(i => i.approvalStatus === 'pending').length,
+          available: items.filter(i => i.status === 'available').length,
+          sample: items.slice(0, 3),
+        }
+      : undefined;
+
+    return res.status(200).json({ items, ...(debug ? { debug: { before: debugBefore, after: debugAfter } } : {}) });
   }
 
   if (req.method === 'POST') {

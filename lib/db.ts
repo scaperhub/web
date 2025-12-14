@@ -12,7 +12,11 @@ function readJson<T>(p: string): T[] {
   if (!fs.existsSync(p)) return [];
   try {
     return JSON.parse(fs.readFileSync(p, 'utf-8'));
-  } catch {
+  } catch (err) {
+    // Local-only: surface invalid JSON so we don't silently show an empty UI.
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Failed to parse JSON file:', p, (err as any)?.message || err);
+    }
     return [];
   }
 }
