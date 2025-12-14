@@ -12,7 +12,11 @@ export default async function handler(
   const user = await getCurrentUser(token || null);
 
   if (req.method === 'GET') {
-    const { categoryId, sellerId, status, approvalStatus } = req.query;
+    const q = req.query as Record<string, string | string[] | undefined>;
+    const categoryId = Array.isArray(q.categoryId) ? q.categoryId[0] : q.categoryId;
+    const sellerId = Array.isArray(q.sellerId) ? q.sellerId[0] : q.sellerId;
+    const status = Array.isArray(q.status) ? q.status[0] : q.status;
+    const approvalStatus = Array.isArray(q.approvalStatus) ? q.approvalStatus[0] : q.approvalStatus;
     let items: Item[] = await db.items.getAll();
 
     // Filter by approvalStatus: non-admins only see approved items (except their own)

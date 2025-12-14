@@ -29,81 +29,89 @@ function getSupabaseAdmin() {
   return supabaseAdmin;
 }
 // Helper functions to convert database types
+function pick<T = any>(data: any, keys: string[], fallback?: T): T {
+  for (const k of keys) {
+    if (data && data[k] !== undefined && data[k] !== null) return data[k] as T;
+  }
+  return fallback as T;
+}
+
 function toUser(data: any): User {
   return {
-    id: data.id,
-    username: data.username,
-    email: data.email,
-    password: data.password,
-    name: data.name,
-    role: data.role,
-    status: data.status,
-    userType: data.userType,
-    emailVerified: data.emailVerified,
-    verified: data.verified,
-    following: data.following || [],
-    createdAt: data.createdAt,
-    bio: data.bio,
-    avatar: data.avatar,
-    backgroundPicture: data.backgroundPicture,
-    country: data.country,
-    city: data.city,
+    id: pick<string>(data, ['id']),
+    username: pick<string>(data, ['username']),
+    email: pick<string>(data, ['email']),
+    password: pick<string>(data, ['password']),
+    name: pick<string>(data, ['name']),
+    role: pick<any>(data, ['role'], 'user'),
+    status: pick<any>(data, ['status'], 'pending'),
+    userType: pick<any>(data, ['userType', 'user_type', 'usertype'], 'hobbyist'),
+    emailVerified: pick<boolean>(data, ['emailVerified', 'email_verified', 'emailverified'], false),
+    verified: pick<boolean>(data, ['verified'], false),
+    following: pick<string[]>(data, ['following'], []) || [],
+    createdAt: pick<string>(data, ['createdAt', 'created_at', 'createdat']),
+    bio: pick<string | undefined>(data, ['bio'], undefined),
+    avatar: pick<string | undefined>(data, ['avatar'], undefined),
+    backgroundPicture: pick<string | undefined>(data, ['backgroundPicture', 'background_picture', 'backgroundpicture'], undefined),
+    country: pick<string | undefined>(data, ['country'], undefined),
+    city: pick<string | undefined>(data, ['city'], undefined),
   };
 }
 
 function toItem(data: any): Item {
   return {
-    id: data.id,
-    title: data.title,
-    description: data.description,
-    price: data.price,
-    quantity: data.quantity,
-    images: data.images || [],
-    categoryId: data.categoryId,
-    subcategoryId: data.subcategoryId || '',
-    sellerId: data.sellerId,
-    status: data.status,
-    approvalStatus: data.approvalStatus,
-    createdAt: data.createdAt,
-    updatedAt: data.updatedAt,
-    location: data.location,
-    condition: data.condition,
+    id: pick<string>(data, ['id']),
+    title: pick<string>(data, ['title']),
+    description: pick<string>(data, ['description']),
+    // Supabase may return numeric as string; keep as-is and let UI coerce.
+    price: pick<any>(data, ['price'], 0),
+    quantity: pick<number>(data, ['quantity'], 1),
+    images: pick<string[]>(data, ['images'], []) || [],
+    categoryId: pick<string>(data, ['categoryId', 'category_id', 'categoryid'], ''),
+    subcategoryId: pick<string>(data, ['subcategoryId', 'subcategory_id', 'subcategoryid'], '') || '',
+    sellerId: pick<string>(data, ['sellerId', 'seller_id', 'sellerid'], ''),
+    status: pick<any>(data, ['status'], 'available'),
+    approvalStatus: pick<any>(data, ['approvalStatus', 'approval_status', 'approvalstatus'], 'pending'),
+    createdAt: pick<string>(data, ['createdAt', 'created_at', 'createdat']),
+    updatedAt: pick<string>(data, ['updatedAt', 'updated_at', 'updatedat']),
+    location: pick<string | undefined>(data, ['location'], undefined),
+    condition: pick<any>(data, ['condition'], undefined),
   };
 }
 
 function toMessage(data: any): Message {
   return {
-    id: data.id,
-    conversationId: data.conversationId,
-    senderId: data.senderId,
-    receiverId: data.receiverId,
-    itemId: data.itemId,
-    content: data.content,
-    createdAt: data.createdAt,
-    read: data.read,
+    id: pick<string>(data, ['id']),
+    conversationId: pick<string>(data, ['conversationId', 'conversation_id', 'conversationid']),
+    senderId: pick<string>(data, ['senderId', 'sender_id', 'senderid']),
+    receiverId: pick<string>(data, ['receiverId', 'receiver_id', 'receiverid']),
+    itemId: pick<string>(data, ['itemId', 'item_id', 'itemid']),
+    content: pick<string>(data, ['content']),
+    createdAt: pick<string>(data, ['createdAt', 'created_at', 'createdat']),
+    read: pick<boolean>(data, ['read'], false),
   };
 }
 
 function toConversation(data: any): Conversation {
   return {
-    id: data.id,
-    itemId: data.itemId,
-    buyerId: data.buyerId,
-    sellerId: data.sellerId,
-    createdAt: data.createdAt,
-    updatedAt: data.updatedAt,
-    lastMessage: data.lastMessage,
-    lastMessageAt: data.lastMessageAt,
+    id: pick<string>(data, ['id']),
+    itemId: pick<string>(data, ['itemId', 'item_id', 'itemid']),
+    buyerId: pick<string>(data, ['buyerId', 'buyer_id', 'buyerid']),
+    sellerId: pick<string>(data, ['sellerId', 'seller_id', 'sellerid']),
+    createdAt: pick<string>(data, ['createdAt', 'created_at', 'createdat']),
+    updatedAt: pick<string>(data, ['updatedAt', 'updated_at', 'updatedat']),
+    lastMessage: pick<string | undefined>(data, ['lastMessage', 'last_message', 'lastmessage'], undefined),
+    lastMessageAt: pick<string | undefined>(data, ['lastMessageAt', 'last_message_at', 'lastmessageat'], undefined),
   };
 }
 
 function toOTP(data: any): OTP {
   return {
-    id: data.id,
-    email: data.email,
-    code: data.code,
-    expiresAt: data.expiresAt,
-    createdAt: data.createdAt,
+    id: pick<string>(data, ['id']),
+    email: pick<string>(data, ['email']),
+    code: pick<string>(data, ['code']),
+    expiresAt: pick<string>(data, ['expiresAt', 'expires_at', 'expiresat']),
+    createdAt: pick<string>(data, ['createdAt', 'created_at', 'createdat']),
   };
 }
 export const db = {
