@@ -1,18 +1,12 @@
 // Hybrid DB: Supabase in production/server, JSON files for local dev.
 import fs from 'fs';
 import path from 'path';
-import supabaseModule from './db-supabase';
+import { db as supabaseDb } from './db-supabase';
 import { User, Category, Item, Message, Conversation, OTP } from './types';
 
 const isProdLike = process.env.VERCEL === '1' || process.env.NODE_ENV === 'production';
 const isSupabaseForced = process.env.USE_SUPABASE === 'true';
 const preferJsonLocal = !isProdLike && process.env.USE_SUPABASE !== 'true';
-
-const supabaseDbResolved =
-  (supabaseModule as any)?.db ||
-  (supabaseModule as any)?.default?.db ||
-  (supabaseModule as any)?.default ||
-  supabaseModule;
 
 function readJson<T>(p: string): T[] {
   if (!fs.existsSync(p)) return [];
@@ -37,19 +31,18 @@ function loadSupabaseDb(): any {
     );
   }
 
-  if (!supabaseDbResolved || !(supabaseDbResolved as any).items) {
+  if (!supabaseDb) {
     const envInfo = {
       hasUrl,
       hasAnon,
       hasService: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
-      supabaseKeys: Object.keys(supabaseModule || {}),
     };
     throw new Error(
-      `Supabase db failed to initialize (missing items collection). Env: ${JSON.stringify(envInfo)}`
+      `Supabase db failed to initialize (no export). Env: ${JSON.stringify(envInfo)}`
     );
   }
 
-  return supabaseDbResolved;
+  return supabaseDb as any;
 }
 
 function createJsonDb(): any {
