@@ -720,3 +720,7 @@ export const db = {
   },
   },
 };
+
+// Provide a default export for interop in different module systems/bundlers
+const supabaseExport = { db };
+export default supabaseExport;
