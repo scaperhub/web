@@ -2,7 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import { User, Category, Item, Message, Conversation, OTP } from './types';
-import * as supabaseModule from './db-supabase';
+import { db as supabaseDb } from './db-supabase';
 
 const USE_SUPABASE =
   process.env.USE_SUPABASE === 'true' ||
@@ -25,13 +25,7 @@ function createDb(): any {
   // Only load Supabase DB when configured; on failure, throw (no JSON fallback in prod)
   if (USE_SUPABASE) {
     try {
-      const supabaseDb =
-        (supabaseModule as any)?.db ||
-        (supabaseModule as any)?.default?.db ||
-        (supabaseModule as any)?.default ||
-        (supabaseModule as any);
-      if (!supabaseDb || !supabaseDb.items) {
-        const keys = Object.keys(supabaseModule || {});
+      if (!supabaseDb || !(supabaseDb as any).items) {
         const envInfo = {
           USE_SUPABASE,
           hasUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -39,7 +33,7 @@ function createDb(): any {
           hasService: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
         };
         throw new Error(
-          `Supabase db failed to initialize (missing items collection). Module keys: ${keys.join(',')}. Env: ${JSON.stringify(envInfo)}`
+          `Supabase db failed to initialize (missing items collection). Env: ${JSON.stringify(envInfo)}`
         );
       }
       return supabaseDb;
