@@ -10,7 +10,13 @@ export async function hashPassword(password: string): Promise<string> {
 }
 
 export async function verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
-  return bcrypt.compare(password, hashedPassword);
+  try {
+    if (!password || !hashedPassword) return false;
+    return await bcrypt.compare(password, hashedPassword);
+  } catch {
+    // If the stored hash is malformed (or missing), treat as invalid credentials.
+    return false;
+  }
 }
 
 export function generateToken(user: User): string {

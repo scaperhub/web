@@ -36,7 +36,11 @@ export default function Login({ user, onLogin, onLogout, onOpenSellSheet }: Logi
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      // Don't assume JSON on errors; Next may return plain text on unhandled exceptions.
+      const contentType = res.headers.get('content-type') || '';
+      const data = contentType.includes('application/json')
+        ? await res.json()
+        : { error: await res.text() };
 
       if (!res.ok) {
         if (data.status === 'pending') {
