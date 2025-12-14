@@ -272,7 +272,8 @@ export const db = {
         throw error; // Re-throw to let the API handler handle it
       }
     },
-  
+  },
+
   categories: {
     getAll: async (): Promise<Category[]> => {
       const { data: categories, error } = await getSupabase()
@@ -725,7 +726,6 @@ export const db = {
       const now = new Date().toISOString();
       await getSupabase().from('otps').delete().lt('expiresAt', now);
     },
-  },
   },
 };
 
