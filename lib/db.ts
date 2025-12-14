@@ -10,7 +10,6 @@ function createDb(): any {
   }
 
   // Lazy require to avoid bundling issues in some environments.
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const supabaseExport = require('./db-supabase');
 
   const supabaseDb =
