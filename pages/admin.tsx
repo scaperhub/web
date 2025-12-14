@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import { Category, User, Item } from '@/lib/types';
 import { formatPrice } from '@/lib/utils';
 import { Plus, Trash2, Edit, Users, CheckCircle, XCircle, X, Package, LayoutDashboard, TrendingUp, Tags, ChevronUp, ChevronDown, GripVertical, Ban } from 'lucide-react';
@@ -379,75 +380,66 @@ export default function Admin({ user, onLogout, onOpenSellSheet }: AdminProps) {
     .slice(0, 5);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white flex flex-col">
       <Navbar user={user} onLogout={onLogout} onOpenSellSheet={onOpenSellSheet} />
-      <div className="max-w-7xl mx-auto">
-        <div className="flex">
-          {/* Left Sidebar - Navigation */}
-          <aside className="w-64 flex-shrink-0 border-r border-gray-200 bg-white min-h-[calc(100vh-80px)]">
-            <div className="p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Admin</h2>
-              <nav className="space-y-1">
-                <button
-                  onClick={() => handleTabChange('dashboard')}
-                  className={`w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${
-                    activeTab === 'dashboard'
-                      ? 'bg-gray-900 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <LayoutDashboard className="w-4 h-4 mr-2 flex-shrink-0" />
-                  <span className="truncate">Dashboard</span>
-                </button>
-                <button
-                  onClick={() => handleTabChange('users')}
-                  className={`w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${
-                    activeTab === 'users'
-                      ? 'bg-gray-900 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <Users className="w-4 h-4 mr-2 flex-shrink-0" />
-                  <span className="truncate">Users</span>
-                  {pendingUsers.length > 0 && (
-                    <span className="ml-2 bg-yellow-500 text-white text-xs px-2 py-0.5 rounded-full flex-shrink-0">
-                      {pendingUsers.length}
-                    </span>
-                  )}
-                </button>
-                <button
-                  onClick={() => handleTabChange('categories')}
-                  className={`w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${
-                    activeTab === 'categories'
-                      ? 'bg-gray-900 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <Tags className="w-4 h-4 mr-2 flex-shrink-0" />
-                  <span className="truncate">Categories</span>
-                </button>
-                <button
-                  onClick={() => handleTabChange('items')}
-                  className={`w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${
-                    activeTab === 'items'
-                      ? 'bg-gray-900 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <Package className="w-4 h-4 mr-2 flex-shrink-0" />
-                  <span className="truncate">Items</span>
-                  {pendingItems.length > 0 && (
-                    <span className="ml-2 bg-yellow-500 text-white text-xs px-2 py-0.5 rounded-full flex-shrink-0">
-                      {pendingItems.length}
-                    </span>
-                  )}
-                </button>
-              </nav>
-            </div>
-          </aside>
+      <div className="max-w-7xl mx-auto flex-1 w-full flex h-full min-h-0">
+        {/* Left Sidebar - Navigation */}
+        <aside className="w-64 flex-shrink-0 border-r border-gray-200 bg-white">
+          <div className="p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Admin</h2>
+            <nav className="space-y-1">
+              <button
+                onClick={() => handleTabChange('dashboard')}
+                className={`w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${
+                  activeTab === 'dashboard' ? 'bg-primary-600 text-white' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <LayoutDashboard className="w-4 h-4 mr-2 flex-shrink-0" />
+                <span className="truncate">Dashboard</span>
+              </button>
+              <button
+                onClick={() => handleTabChange('users')}
+                className={`w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${
+                  activeTab === 'users' ? 'bg-primary-600 text-white' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <Users className="w-4 h-4 mr-2 flex-shrink-0" />
+                <span className="truncate">Users</span>
+                {pendingUsers.length > 0 && (
+                  <span className="ml-2 bg-yellow-500 text-white text-xs px-2 py-0.5 rounded-full flex-shrink-0">
+                    {pendingUsers.length}
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={() => handleTabChange('categories')}
+                className={`w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${
+                  activeTab === 'categories' ? 'bg-primary-600 text-white' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <Tags className="w-4 h-4 mr-2 flex-shrink-0" />
+                <span className="truncate">Categories</span>
+              </button>
+              <button
+                onClick={() => handleTabChange('items')}
+                className={`w-full text-left px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${
+                  activeTab === 'items' ? 'bg-primary-600 text-white' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <Package className="w-4 h-4 mr-2 flex-shrink-0" />
+                <span className="truncate">Items</span>
+                {pendingItems.length > 0 && (
+                  <span className="ml-2 bg-yellow-500 text-white text-xs px-2 py-0.5 rounded-full flex-shrink-0">
+                    {pendingItems.length}
+                  </span>
+                )}
+              </button>
+            </nav>
+          </div>
+        </aside>
 
-          {/* Right Content Area */}
-          <main className="flex-1 p-8">
+        {/* Right Content Area */}
+        <main className="flex-1 p-8 flex flex-col min-h-0">
           {activeTab === 'dashboard' && (
             <>
               <div className="mb-6">
@@ -810,7 +802,7 @@ export default function Admin({ user, onLogout, onOpenSellSheet }: AdminProps) {
                 </div>
                 <button
                   onClick={handleCreateCategory}
-                  className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 flex items-center text-sm font-medium"
+                className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 flex items-center text-sm font-medium"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Category
@@ -976,7 +968,7 @@ export default function Admin({ user, onLogout, onOpenSellSheet }: AdminProps) {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="flex-1 bg-gray-900 text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 transition-colors"
+                        className="flex-1 bg-primary-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-700 disabled:opacity-50 transition-colors"
                       >
                         {loading ? 'Saving...' : viewMode === 'edit' ? 'Update' : 'Create'}
                       </button>
@@ -1166,7 +1158,7 @@ export default function Admin({ user, onLogout, onOpenSellSheet }: AdminProps) {
           )}
           </main>
         </div>
-      </div>
+      <Footer />
     </div>
   );
 }

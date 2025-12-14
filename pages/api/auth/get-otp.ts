@@ -25,7 +25,8 @@ export default async function handler(
   }
 
   try {
-    const otp = await db.otps.getByEmail(email);
+    const normalizedEmail = email.toLowerCase();
+    const otp = await db.otps.getByEmail(normalizedEmail);
     
     if (!otp) {
       return res.status(404).json({ error: 'No OTP found for this email' });

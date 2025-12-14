@@ -39,6 +39,9 @@ export default async function handler(
     }
     if (status) {
       items = items.filter((i: Item) => i.status === status);
+    } else {
+      // By default hide sold items from listings
+      items = items.filter((i: Item) => i.status !== 'sold');
     }
 
     // Sort by newest first

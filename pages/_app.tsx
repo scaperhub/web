@@ -1,6 +1,6 @@
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { User, Item } from '@/lib/types';
 import SellSheet from '@/components/SellSheet';
@@ -15,29 +15,99 @@ export default function App({ Component, pageProps }: AppProps) {
   const [showEditProfileSheet, setShowEditProfileSheet] = useState(false);
   const [showEditItemSheet, setShowEditItemSheet] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
+  const [unreadCount, setUnreadCount] = useState<number>(0);
+  const unreadIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
-      fetch('/api/auth/me', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.user) {
-            setUser(data.user);
-          }
-        })
-        .catch(() => {
-          localStorage.removeItem('token');
-        })
-        .finally(() => setLoading(false));
-    } else {
+    if (!token) {
       setLoading(false);
+      return;
     }
+
+    const loadUser = async () => {
+      try {
+        const res = await fetch('/api/auth/me', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          // Token invalid or user no longer authorized (e.g., suspended)
+          localStorage.removeItem('token');
+          setUser(null);
+          return;
+        }
+
+        const data = await res.json();
+        if (data.user) {
+          setUser(data.user);
+        } else {
+          localStorage.removeItem('token');
+          setUser(null);
+        }
+      } catch {
+        localStorage.removeItem('token');
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUser();
   }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    const fetchUnread = async () => {
+      try {
+        const res = await fetch('/api/messages', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+        if (typeof data.unreadCount === 'number') {
+          setUnreadCount(data.unreadCount);
+        }
+      } catch {
+        // ignore
+      }
+    };
+
+    fetchUnread();
+
+    if (unreadIntervalRef.current) {
+      clearInterval(unreadIntervalRef.current);
+    }
+    unreadIntervalRef.current = setInterval(fetchUnread, 15000);
+
+    return () => {
+      if (unreadIntervalRef.current) {
+        clearInterval(unreadIntervalRef.current);
+        unreadIntervalRef.current = null;
+      }
+    };
+  }, [user]);
+
+  const refreshUnread = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    try {
+      const res = await fetch('/api/messages', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (typeof data.unreadCount === 'number') {
+        setUnreadCount(data.unreadCount);
+      }
+    } catch {
+      // ignore
+    }
+  };
 
   const login = (userData: User, token: string) => {
     localStorage.setItem('token', token);
@@ -47,6 +117,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
+    setUnreadCount(0);
   };
 
   const openSellSheet = () => {
@@ -89,6 +160,8 @@ export default function App({ Component, pageProps }: AppProps) {
         user={user} 
         onLogin={login} 
         onLogout={logout}
+        unreadCount={unreadCount}
+        refreshUnread={refreshUnread}
         onOpenSellSheet={openSellSheet}
         onOpenEditProfileSheet={openEditProfileSheet}
         onOpenEditItemSheet={openEditItemSheet}

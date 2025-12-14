@@ -1,15 +1,16 @@
 import Link from 'next/link';
 import { User } from '@/lib/types';
 import { getProfileUrl } from '@/lib/utils';
-import { ShoppingCart, User as UserIcon, LogOut, Settings } from 'lucide-react';
+import { MessageCircle, User as UserIcon, LogOut, Settings, AlertTriangle } from 'lucide-react';
 
 interface NavbarProps {
   user: User | null;
   onLogout: () => void;
   onOpenSellSheet?: () => void;
+  unreadCount?: number;
 }
 
-export default function Navbar({ user, onLogout, onOpenSellSheet }: NavbarProps) {
+export default function Navbar({ user, onLogout, onOpenSellSheet, unreadCount = 0 }: NavbarProps) {
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -42,9 +43,14 @@ export default function Navbar({ user, onLogout, onOpenSellSheet }: NavbarProps)
               <>
                 <Link
                   href="/messages"
-                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                  className="relative text-gray-600 hover:text-gray-900 transition-colors"
                 >
-                  <ShoppingCart className="w-5 h-5" />
+                  <MessageCircle className="w-5 h-5" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] leading-none font-semibold px-1.5 py-0.5 rounded-full">
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )}
                 </Link>
                 <Link
                   href={getProfileUrl(user.username, user.userType)}
@@ -67,15 +73,26 @@ export default function Navbar({ user, onLogout, onOpenSellSheet }: NavbarProps)
                 >
                   Login
                 </Link>
-                <Link
-                  href="/register"
-                  className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
-                >
+              <Link
+                href="/register"
+                className="bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors"
+              >
                   Sign Up
                 </Link>
               </>
             )}
           </div>
+        </div>
+      </div>
+      <div className="bg-amber-50 border-t border-b border-amber-200">
+        <div
+          className="max-w-7xl mx-auto px-6 lg:px-8 py-2 text-xs sm:text-sm text-amber-900 text-center flex items-center justify-center gap-2"
+          role="alert"
+          aria-live="polite"
+        >
+          <AlertTriangle className="w-4 h-4 text-amber-700 animate-pulse" aria-hidden="true" />
+          <span className="font-semibold">Safety:</span>
+          <span>Absolutely no sharing of personal info — transact ONLY with confirmed, genuine sellers.</span>
         </div>
       </div>
     </nav>

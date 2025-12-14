@@ -33,7 +33,15 @@ export async function getCurrentUser(token: string | null): Promise<User | null>
   if (!token) return null;
   const decoded = verifyToken(token);
   if (!decoded) return null;
-  return (await db.users.getById(decoded.id)) || null;
+  const user = (await db.users.getById(decoded.id)) || null;
+  if (!user) return null;
+
+  // Invalidate tokens if the account is not approved (e.g., suspended or pending)
+  if (user.status !== 'approved') {
+    return null;
+  }
+
+  return user;
 }
 
 

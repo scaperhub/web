@@ -204,11 +204,18 @@ export default function UserProfile({ user, onLogout, onOpenSellSheet, onOpenEdi
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/70"></div>
             </div>
           ) : (
-            <div className="w-full h-80 bg-gradient-to-br from-gray-500 via-gray-600 to-gray-700 relative">
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/60"></div>
-              <div className="absolute inset-0 opacity-10" style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-              }}></div>
+            <div className="w-full h-80 relative overflow-hidden bg-gradient-to-br from-sky-900 via-cyan-800 to-blue-900">
+              <div
+                className="absolute inset-0 opacity-40"
+                style={{
+                  backgroundImage:
+                    'url("data:image/svg+xml,%3Csvg width=\'240\' height=\'240\' viewBox=\'0 0 240 240\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cdefs%3E%3ClinearGradient id=\'waveGrad\' x1=\'0%25\' y1=\'0%25\' x2=\'0%25\' y2=\'100%25\'%3E%3Cstop stop-color=\'%23ffffff\' stop-opacity=\'0.35\' offset=\'0%25\'/%3E%3Cstop stop-color=\'%23ffffff\' stop-opacity=\'0.05\' offset=\'100%25\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d=\'M-40 120 Q20 95 80 120 T200 120 T320 120 V240 H-40 Z\' fill=\'url(%23waveGrad)\'/%3E%3Cpath d=\'M-60 160 Q10 135 80 160 T220 160 T360 160 V240 H-60 Z\' fill=\'url(%23waveGrad)\' opacity=\'0.7\'/%3E%3Cpath d=\'M-20 90 Q40 70 100 90 T220 90 T340 90 V240 H-20 Z\' fill=\'url(%23waveGrad)\' opacity=\'0.5\'/%3E%3C/svg%3E")',
+                  backgroundSize: '220px 220px',
+                  backgroundRepeat: 'repeat',
+                }}
+              />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(255,255,255,0.12),transparent_35%),radial-gradient(circle_at_80%_15%,rgba(255,255,255,0.08),transparent_32%)]" />
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/18 to-black/60" />
             </div>
           )}
           
@@ -392,79 +399,74 @@ export default function UserProfile({ user, onLogout, onOpenSellSheet, onOpenEdi
           </div>
         )}
 
-        <div className="mb-6">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-            Listed Items ({items.length})
-          </h2>
-          
-          {/* Subcategory Filters */}
-          {(() => {
-            // Get all subcategories from all categories
-            const allSubcategories = categories.flatMap(cat => 
-              cat.subcategories.map(sub => ({ ...sub, categoryName: cat.name }))
-            );
-            
-            // Get subcategory IDs that have items available
-            const availableSubcategoryIds = new Set(
-              items
-                .map(item => item.subcategoryId)
-                .filter(id => id) // Filter out empty/null subcategoryIds
-            );
-            
-            // Filter subcategories to only show those with available items
-            const availableSubcategories = allSubcategories.filter(sub => 
-              availableSubcategoryIds.has(sub.id)
-            );
-            
-            return availableSubcategories.length > 0 ? (
-              <div className="flex flex-wrap gap-2 mb-6">
+        {/* Subcategory Filters (only when items exist) */}
+        {(() => {
+          if (items.length === 0) return null;
+
+          const allSubcategories = categories.flatMap(cat =>
+            cat.subcategories.map(sub => ({ ...sub, categoryName: cat.name }))
+          );
+
+          const availableSubcategoryIds = new Set(
+            items
+              .map(item => item.subcategoryId)
+              .filter(id => id)
+          );
+
+          const availableSubcategories = allSubcategories.filter(sub =>
+            availableSubcategoryIds.has(sub.id)
+          );
+
+          if (availableSubcategories.length === 0) return null;
+
+          return (
+            <div className="flex flex-wrap gap-2 mb-6">
+              <button
+                onClick={() => {
+                  setSelectedSubcategory('');
+                  router.push(
+                    {
+                      pathname: `/user/${username}`,
+                      query: {},
+                    },
+                    undefined,
+                    { shallow: true }
+                  );
+                }}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                  !selectedSubcategory
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                All
+              </button>
+              {availableSubcategories.map(sub => (
                 <button
+                  key={sub.id}
                   onClick={() => {
-                    setSelectedSubcategory('');
+                    setSelectedSubcategory(sub.id);
                     router.push(
                       {
                         pathname: `/user/${username}`,
-                        query: {},
+                        query: { subcategory: sub.id },
                       },
                       undefined,
                       { shallow: true }
                     );
                   }}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    !selectedSubcategory
-                      ? 'bg-gray-900 text-white'
+                    selectedSubcategory === sub.id
+                      ? 'bg-primary-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  All
+                  {sub.name}
                 </button>
-                {availableSubcategories.map(sub => (
-                  <button
-                    key={sub.id}
-                    onClick={() => {
-                      setSelectedSubcategory(sub.id);
-                      router.push(
-                        {
-                          pathname: `/user/${username}`,
-                          query: { subcategory: sub.id },
-                        },
-                        undefined,
-                        { shallow: true }
-                      );
-                    }}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                      selectedSubcategory === sub.id
-                        ? 'bg-gray-900 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    {sub.name}
-                  </button>
-                ))}
-              </div>
-            ) : null;
-          })()}
-        </div>
+              ))}
+            </div>
+          );
+        })()}
 
         {(() => {
           // Filter items by selected subcategory
@@ -473,10 +475,8 @@ export default function UserProfile({ user, onLogout, onOpenSellSheet, onOpenEdi
             : items;
 
           return filteredItems.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-lg shadow-md">
-              <div className="text-xl text-gray-500">
-                {selectedSubcategory ? 'No items in this subcategory' : 'No items listed yet'}
-              </div>
+            <div className="text-center py-6 text-gray-600">
+              {selectedSubcategory ? 'No items in this subcategory' : 'No items listed yet'}
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

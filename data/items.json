@@ -31,7 +31,7 @@
     "sellerId": "1765026595778-xp0j7jnmu",
     "status": "available",
     "createdAt": "2025-12-06T14:25:18.683Z",
-    "updatedAt": "2025-12-06T14:25:18.683Z",
+    "updatedAt": "2025-12-12T14:42:13.321Z",
     "location": "Bengaluru",
     "condition": "used",
     "approvalStatus": "approved",
@@ -95,22 +95,58 @@
     "quantity": 1
   },
   {
-    "id": "1765048482325-m3hgtjmjn",
-    "title": "Moss",
-    "description": "Moss",
-    "price": 100,
+    "id": "1765535919738-8bgz419zq",
+    "title": "Tank",
+    "description": "Glass tank",
+    "price": 200,
+    "quantity": 1,
     "images": [
-      "https://aquascapinglove.com/wp-content/uploads/2016/04/aquatic-moss-guide-aquascaping.jpg"
+      "/uploads/1765535916632-ar5hcmrq0r9.jpg"
     ],
-    "categoryId": "1765027166698-fbka5lbz4",
-    "subcategoryId": "1765039612708-dk20wdhkb",
-    "sellerId": "1765027085999-asew7a6n6",
+    "categoryId": "1765026738007-5pcsnxk8v",
+    "subcategoryId": "1765028982617-tigossnai",
+    "sellerId": "1765026595778-xp0j7jnmu",
     "status": "available",
-    "createdAt": "2025-12-06T19:14:42.325Z",
-    "updatedAt": "2025-12-06T19:14:42.325Z",
-    "location": "Bengaluru",
-    "condition": "used",
     "approvalStatus": "approved",
-    "quantity": 1
+    "createdAt": "2025-12-12T10:38:39.738Z",
+    "updatedAt": "2025-12-12T10:38:39.738Z",
+    "location": "Bangalore, India",
+    "condition": "used"
+  },
+  {
+    "id": "1765544355739-crt44qiev",
+    "title": "Cabochon Ruby",
+    "description": "It is a durable and decorative glass made check valve. The valve is produced from a mineral close to Ruby, and it does not deteriorate from a long-term use. Moisten the mineral before installation.\n",
+    "price": 9800,
+    "quantity": 1,
+    "images": [
+      "/uploads/1765544353717-s9ap2orvysm.jpg"
+    ],
+    "categoryId": "1765026738007-5pcsnxk8v",
+    "subcategoryId": "1765028982617-tigossnai",
+    "sellerId": "1765541328954-4be7yrogh",
+    "status": "available",
+    "approvalStatus": "approved",
+    "createdAt": "2025-12-12T12:59:15.739Z",
+    "updatedAt": "2025-12-12T12:59:30.678Z",
+    "location": "Bangalore, India",
+    "condition": "used"
+  },
+  {
+    "id": "1765686411247-s8rgfvs4o",
+    "title": "QA Test Item",
+    "description": "Test item for chat flows",
+    "price": 1000,
+    "quantity": 1,
+    "images": [],
+    "categoryId": "1765026738007-5pcsnxk8v",
+    "subcategoryId": "1765028982617-tigossnai",
+    "sellerId": "test-seller-001",
+    "status": "available",
+    "approvalStatus": "approved",
+    "createdAt": "2025-12-14T04:26:51.247Z",
+    "updatedAt": "2025-12-14T04:27:24.717Z",
+    "location": "Bangalore",
+    "condition": "used"
   }
 ]

@@ -1,22 +1,72 @@
 [
   {
-    "id": "1765027096547-frl7y6y9p",
-    "itemId": "1765027013553-0ubzcs4mp",
-    "buyerId": "1765027085999-asew7a6n6",
+    "id": "1765542052231-fu0u4830y",
+    "itemId": "1765031118683-ukp4u9lv7",
+    "buyerId": "1765541328954-4be7yrogh",
     "sellerId": "1765026595778-xp0j7jnmu",
-    "createdAt": "2025-12-06T13:18:16.547Z",
-    "updatedAt": "2025-12-06T13:41:52.497Z",
-    "lastMessage": "Hello",
-    "lastMessageAt": "2025-12-06T13:41:52.497Z"
+    "createdAt": "2025-12-12T12:20:52.231Z",
+    "updatedAt": "2025-12-12T13:46:08.137Z",
+    "lastMessage": "Are you in US?",
+    "lastMessageAt": "2025-12-12T13:46:08.137Z"
   },
   {
-    "id": "1765042790443-0frjzac6m",
-    "itemId": "1765031630762-rzq2ph47d",
-    "buyerId": "1765027085999-asew7a6n6",
+    "id": "1765542212109-bs2yh5jtz",
+    "itemId": "1765031118683-ukp4u9lv7",
+    "buyerId": "1765522630928-5gj46e6kd",
     "sellerId": "1765026595778-xp0j7jnmu",
-    "createdAt": "2025-12-06T17:39:50.443Z",
-    "updatedAt": "2025-12-06T17:40:19.066Z",
-    "lastMessage": "200",
-    "lastMessageAt": "2025-12-06T17:40:19.066Z"
+    "createdAt": "2025-12-12T12:23:32.109Z",
+    "updatedAt": "2025-12-12T12:24:52.179Z",
+    "lastMessage": "Interested in this item",
+    "lastMessageAt": "2025-12-12T12:24:52.179Z"
+  },
+  {
+    "id": "1765542737375-m8rudo6c1",
+    "itemId": "1765042448419-79jxv6sso",
+    "buyerId": "1765541328954-4be7yrogh",
+    "sellerId": "1765026595778-xp0j7jnmu",
+    "createdAt": "2025-12-12T12:32:17.375Z",
+    "updatedAt": "2025-12-12T13:47:52.417Z",
+    "lastMessage": "OK",
+    "lastMessageAt": "2025-12-12T13:47:52.417Z"
+  },
+  {
+    "id": "1765542745794-lv0st197i",
+    "itemId": "1765042448419-79jxv6sso",
+    "buyerId": "1765522630928-5gj46e6kd",
+    "sellerId": "1765026595778-xp0j7jnmu",
+    "createdAt": "2025-12-12T12:32:25.794Z",
+    "updatedAt": "2025-12-12T12:32:25.794Z",
+    "lastMessage": "Interested in this item",
+    "lastMessageAt": "2025-12-12T12:32:25.794Z"
+  },
+  {
+    "id": "1765544383554-4xgpekfvc",
+    "itemId": "1765544355739-crt44qiev",
+    "buyerId": "1765026595778-xp0j7jnmu",
+    "sellerId": "1765541328954-4be7yrogh",
+    "createdAt": "2025-12-12T12:59:43.554Z",
+    "updatedAt": "2025-12-12T13:58:42.901Z",
+    "lastMessage": "Is this working?",
+    "lastMessageAt": "2025-12-12T13:58:42.901Z"
+  },
+  {
+    "id": "1765686359608-fw957lwf7",
+    "itemId": "1765027013553-0ubzcs4mp",
+    "buyerId": "test-user-001",
+    "sellerId": "1765026595778-xp0j7jnmu",
+    "createdAt": "2025-12-14T04:25:59.608Z",
+    "updatedAt": "2025-12-14T04:26:22.505Z",
+    "lastMessage": "Hi seller",
+    "lastMessageAt": "2025-12-14T04:26:22.505Z"
+  },
+  {
+    "id": "1765686424675-oh6o7sb9w",
+    "itemId": "1765686411247-s8rgfvs4o",
+    "buyerId": "test-user-001",
+    "sellerId": "test-seller-001",
+    "createdAt": "2025-12-14T04:27:04.675Z",
+    "updatedAt": "2025-12-14T04:27:12.136Z",
+    "lastMessage": "Hello seller",
+    "lastMessageAt": "2025-12-14T04:27:12.136Z"
   }
 ]

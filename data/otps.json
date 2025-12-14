@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "id": "1765533138707-6oheyni2o",
+    "email": "nagac85@gmail.com",
+    "code": "552281",
+    "expiresAt": "2025-12-12T10:02:18.707Z",
+    "createdAt": "2025-12-12T09:52:18.707Z"
+  },
+  {
+    "id": "1765541413462-evwi08q62",
+    "email": "nagac360@gmail.com",
+    "code": "324639",
+    "expiresAt": "2025-12-12T12:20:13.462Z",
+    "createdAt": "2025-12-12T12:10:13.462Z"
+  }
+]

@@ -16,7 +16,8 @@ export default async function handler(
     return res.status(400).json({ error: 'Missing email or password' });
   }
 
-  const user = await db.users.getByEmail(email);
+  const normalizedEmail = email.toLowerCase();
+  const user = await db.users.getByEmail(normalizedEmail);
   if (!user) {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
@@ -37,15 +38,21 @@ export default async function handler(
   // Check if user is approved by admin
   if (user.status !== 'approved') {
     if (user.status === 'pending') {
-      return res.status(403).json({ 
+      return res.status(403).json({
         error: 'Your account is pending admin approval. Please wait for approval.',
         status: 'pending',
       });
     }
     if (user.status === 'rejected') {
-      return res.status(403).json({ 
+      return res.status(403).json({
         error: 'Your account has been rejected. Please contact support.',
         status: 'rejected',
+      });
+    }
+    if (user.status === 'suspended') {
+      return res.status(403).json({
+        error: 'Your account has been suspended. Please contact support.',
+        status: 'suspended',
       });
     }
   }

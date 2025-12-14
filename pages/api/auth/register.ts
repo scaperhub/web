@@ -32,7 +32,8 @@ export default async function handler(
   }
 
   // Check if email exists
-  const existingUserByEmail = await db.users.getByEmail(email);
+  const normalizedEmail = email.toLowerCase();
+  const existingUserByEmail = await db.users.getByEmail(normalizedEmail);
   if (existingUserByEmail) {
     return res.status(400).json({ error: 'Email already exists' });
   }
@@ -44,24 +45,24 @@ export default async function handler(
   }
 
   // Generate and send OTP
-  const { code, expiresAt } = createOTP(email);
+  const { code, expiresAt } = createOTP(normalizedEmail);
   const otp: OTP = {
     id: generateId(),
-    email,
+    email: normalizedEmail,
     code,
     expiresAt,
     createdAt: new Date().toISOString(),
   };
 
   await db.otps.create(otp);
-  await sendOTP(email, code);
+  await sendOTP(normalizedEmail, code);
 
   // Create user with pending status
   const hashedPassword = await hashPassword(password);
   const user: User = {
     id: generateId(),
     username: username.toLowerCase(),
-    email,
+    email: normalizedEmail,
     password: hashedPassword,
     name,
     role: 'user',

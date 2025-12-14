@@ -21,8 +21,8 @@ export default function ItemDetail({ user, onLogout, onOpenSellSheet, onOpenEdit
   const [category, setCategory] = useState<Category | null>(null);
   const [seller, setSeller] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState('');
-  const [sending, setSending] = useState(false);
+  const [interestLoading, setInterestLoading] = useState(false);
+  const [interestSent, setInterestSent] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
@@ -51,34 +51,28 @@ export default function ItemDetail({ user, onLogout, onOpenSellSheet, onOpenEdit
       });
   }, [id]);
 
-  const handleSendMessage = async () => {
-    if (!user || !item || !message.trim()) return;
-
-    setSending(true);
+  const handleInterest = async () => {
+    if (!user || !item) return;
+    setInterestLoading(true);
     const token = localStorage.getItem('token');
-
     try {
-      const res = await fetch('/api/messages', {
+      const res = await fetch(`/api/items/${item.id}/interest`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          itemId: item.id,
-          receiverId: item.sellerId,
-          content: message,
-        }),
       });
-
       if (res.ok) {
-        setMessage('');
-        alert('Message sent!');
+        setInterestSent(true);
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Failed to submit interest');
       }
-    } catch (err) {
-      alert('Failed to send message');
+    } catch {
+      alert('Failed to submit interest');
     } finally {
-      setSending(false);
+      setInterestLoading(false);
     }
   };
 
@@ -199,7 +193,7 @@ export default function ItemDetail({ user, onLogout, onOpenSellSheet, onOpenEdit
                 {canEdit && onOpenEditItemSheet && item && (
                   <button
                     onClick={() => onOpenEditItemSheet(item)}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium whitespace-nowrap"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium whitespace-nowrap"
                   >
                     <Edit className="w-4 h-4" />
                     Edit
@@ -311,35 +305,30 @@ export default function ItemDetail({ user, onLogout, onOpenSellSheet, onOpenEdit
               </div>
             )}
 
-            {/* Contact Seller */}
+            {/* Interest CTA */}
             {user && !isSeller && item.status === 'available' && (
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                   <MessageCircle className="w-5 h-5" />
-                  Contact Seller
+                  I&apos;m interested
                 </h3>
-                <textarea
-                  value={message}
-                  onChange={e => setMessage(e.target.value)}
-                  placeholder="Send a message to the seller..."
-                  rows={4}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all resize-none mb-4"
-                />
+                <p className="text-sm text-gray-600 mb-4">
+                  We&apos;ll notify the seller. If they accept, the chat will open in Messages.
+                </p>
                 <button
-                  onClick={handleSendMessage}
-                  disabled={sending || !message.trim()}
-                  className="w-full bg-gray-900 text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                  onClick={handleInterest}
+                  disabled={interestLoading || interestSent}
+                  className="w-full bg-primary-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                 >
-                  {sending ? (
+                  {interestLoading ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                       Sending...
                     </>
+                  ) : interestSent ? (
+                    'Interest sent'
                   ) : (
-                    <>
-                      <MessageCircle className="w-4 h-4" />
-                      Send Message
-                    </>
+                    'I’m interested'
                   )}
                 </button>
               </div>
@@ -348,7 +337,7 @@ export default function ItemDetail({ user, onLogout, onOpenSellSheet, onOpenEdit
             {!user && item.status === 'available' && (
               <Link
                 href="/login"
-                className="block w-full bg-gray-900 text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-800 transition-colors text-center"
+                className="block w-full bg-primary-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-700 transition-colors text-center"
               >
                 Login to contact seller
               </Link>

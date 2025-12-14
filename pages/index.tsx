@@ -266,7 +266,7 @@ export default function Home({ user, onLogin, onLogout, onOpenSellSheet }: HomeP
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar user={user} onLogout={onLogout} onOpenSellSheet={onOpenSellSheet} />
       
       {/* Banner with Search */}
@@ -318,12 +318,12 @@ export default function Home({ user, onLogin, onLogout, onOpenSellSheet }: HomeP
                         handleSearch();
                       }
                     }}
-                    className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                   />
                 </div>
                 <button
                   onClick={handleSearch}
-                  className="bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors whitespace-nowrap"
+                  className="bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors whitespace-nowrap"
                 >
                   Search
                 </button>
@@ -333,7 +333,7 @@ export default function Home({ user, onLogin, onLogout, onOpenSellSheet }: HomeP
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl mx-auto px-6 lg:px-8 py-8 w-full">
         {/* Tabs - Always show when no search/category filter */}
         {!activeSearchTerm && !activeCategory && (
           <div className="mb-8">
@@ -344,13 +344,13 @@ export default function Home({ user, onLogin, onLogout, onOpenSellSheet }: HomeP
                 }}
                 className={`px-1 py-4 font-medium text-sm transition-colors relative ${
                   filter === 'latest'
-                    ? 'text-gray-900'
+                    ? 'text-primary-700'
                     : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
                 Latest
                 {filter === 'latest' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-900"></span>
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600"></span>
                 )}
               </button>
               <button
@@ -360,13 +360,13 @@ export default function Home({ user, onLogin, onLogout, onOpenSellSheet }: HomeP
                 disabled={!user}
                 className={`px-1 py-4 font-medium text-sm transition-colors relative ${
                   filter === 'following'
-                    ? 'text-gray-900'
+                    ? 'text-primary-700'
                     : 'text-gray-500 hover:text-gray-700'
                 } ${!user ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 Following
                 {filter === 'following' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-900"></span>
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600"></span>
                 )}
               </button>
             </div>
@@ -380,7 +380,7 @@ export default function Home({ user, onLogin, onLogout, onOpenSellSheet }: HomeP
                   }}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                     !selectedSubcategory
-                      ? 'bg-gray-900 text-white'
+                    ? 'bg-primary-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
@@ -394,7 +394,7 @@ export default function Home({ user, onLogin, onLogout, onOpenSellSheet }: HomeP
                     }}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                       selectedSubcategory === sub.id
-                        ? 'bg-gray-900 text-white'
+                        ? 'bg-primary-600 text-white'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
@@ -579,7 +579,7 @@ export default function Home({ user, onLogin, onLogout, onOpenSellSheet }: HomeP
             {user && !activeSearchTerm && !activeCategory && (
               <button
                 onClick={onOpenSellSheet}
-                className="inline-block bg-gray-900 text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
+                className="inline-block bg-primary-600 text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors"
               >
                 List Your First Item
               </button>

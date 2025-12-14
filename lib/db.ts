@@ -23,7 +23,6 @@ function writeJson<T>(p: string, data: T[]) {
 function createDb(): any {
   // Only load Supabase DB when configured to avoid throwing on import
   if (USE_SUPABASE) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { db: supabaseDb } = require('./db-supabase');
     return supabaseDb;
   }
@@ -59,7 +58,10 @@ function createDb(): any {
   const dbJson = {
     users: {
       getAll: async () => readJson<User>(f('users.json')),
-      getByEmail: async (email: string) => readJson<User>(f('users.json')).find(u => u.email === email),
+      getByEmail: async (email: string) => {
+        const target = email.toLowerCase();
+        return readJson<User>(f('users.json')).find(u => u.email?.toLowerCase() === target);
+      },
       getById: async (id: string) => readJson<User>(f('users.json')).find(u => u.id === id),
       getByUsername: async (username: string) => readJson<User>(f('users.json')).find(u => u.username === username),
       create: async (user: User) => {

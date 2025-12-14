@@ -10,7 +10,7 @@ interface ItemCardProps {
 export default function ItemCard({ item }: ItemCardProps) {
   return (
     <Link href={`/items/${item.id}`}>
-      <div className="bg-white rounded-xl border border-gray-100 overflow-hidden hover:border-gray-200 transition-all cursor-pointer group">
+      <div className="bg-white rounded-xl border border-gray-100 overflow-hidden transition-all cursor-pointer group hover:border-gray-200 hover:shadow-lg hover:-translate-y-1">
         <div className="aspect-w-16 aspect-h-9 bg-gray-50 overflow-hidden">
           {item.images && item.images.length > 0 ? (
             <img

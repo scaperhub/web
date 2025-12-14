@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import ItemCard from '@/components/ItemCard';
+import Footer from '@/components/Footer';
 import { Item, Category, User } from '@/lib/types';
 
 interface BrowseProps {
@@ -37,9 +38,9 @@ export default function Browse({ user, onLogout, onOpenSellSheet }: BrowseProps)
   });
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white flex flex-col">
       <Navbar user={user} onLogout={onLogout} onOpenSellSheet={onOpenSellSheet} />
-      <main className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+      <main className="flex-1 max-w-7xl mx-auto px-6 lg:px-8 py-16 w-full">
         <div className="mb-12">
           <h1 className="text-3xl font-semibold text-gray-900 mb-2">Browse Items</h1>
           <p className="text-sm text-gray-500">{filteredItems.length} items available</p>
@@ -83,6 +84,7 @@ export default function Browse({ user, onLogout, onOpenSellSheet }: BrowseProps)
           </div>
         )}
       </main>
+      <Footer />
     </div>
   );
 }

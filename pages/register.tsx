@@ -28,6 +28,8 @@ export default function Register({ user, onLogin, onLogout, onOpenSellSheet }: R
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  const [agree, setAgree] = useState(false);
+  const [policyModal, setPolicyModal] = useState(false);
 
   if (user) {
     router.push('/');
@@ -38,6 +40,11 @@ export default function Register({ user, onLogin, onLogout, onOpenSellSheet }: R
     e.preventDefault();
     setError('');
     setSuccess('');
+
+    if (!agree) {
+      setError('You must agree to the Privacy Policy and Terms of Service.');
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
@@ -221,7 +228,7 @@ export default function Register({ user, onLogin, onLogout, onOpenSellSheet }: R
                   onClick={() => setUserType('hobbyist')}
                   className={`px-4 py-3 border-2 rounded-lg font-medium transition-all ${
                     userType === 'hobbyist'
-                      ? 'border-gray-900 bg-gray-50 text-gray-900'
+                      ? 'border-primary-600 bg-primary-50 text-primary-700'
                       : 'border-gray-200 text-gray-600 hover:border-gray-300'
                   }`}
                 >
@@ -232,7 +239,7 @@ export default function Register({ user, onLogin, onLogout, onOpenSellSheet }: R
                   onClick={() => setUserType('shop')}
                   className={`px-4 py-3 border-2 rounded-lg font-medium transition-all ${
                     userType === 'shop'
-                      ? 'border-gray-900 bg-gray-50 text-gray-900'
+                      ? 'border-primary-600 bg-primary-50 text-primary-700'
                       : 'border-gray-200 text-gray-600 hover:border-gray-300'
                   }`}
                 >
@@ -322,10 +329,45 @@ export default function Register({ user, onLogin, onLogout, onOpenSellSheet }: R
                 </select>
               </div>
             )}
+            <div className="flex items-start gap-3">
+              <input
+                id="agree"
+                type="checkbox"
+                checked={agree}
+                onChange={e => {
+                  if (agree) {
+                    setAgree(false);
+                  } else {
+                    e.preventDefault();
+                    setPolicyModal(true);
+                  }
+                }}
+                className="mt-1 h-4 w-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900"
+                required
+              />
+              <label htmlFor="agree" className="text-sm text-gray-600 leading-6">
+                I agree to the{' '}
+                <button
+                  type="button"
+                  onClick={() => setPolicyModal(true)}
+                  className="text-gray-900 font-medium hover:underline"
+                >
+                  Privacy Policy
+                </button>{' '}
+                and{' '}
+                <button
+                  type="button"
+                  onClick={() => setPolicyModal(true)}
+                  className="text-gray-900 font-medium hover:underline"
+                >
+                  Terms of Service
+                </button>.
+              </label>
+            </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gray-900 text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 disabled:opacity-50 transition-colors"
+              className="w-full bg-primary-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
             >
               {loading ? 'Creating account...' : 'Create account'}
             </button>
@@ -353,7 +395,7 @@ export default function Register({ user, onLogin, onLogout, onOpenSellSheet }: R
             <button
               type="submit"
               disabled={loading || otp.length !== 6}
-              className="w-full bg-gray-900 text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 disabled:opacity-50 transition-colors"
+              className="w-full bg-primary-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
             >
               {loading ? 'Verifying...' : 'Verify Email'}
             </button>
@@ -376,6 +418,84 @@ export default function Register({ user, onLogin, onLogout, onOpenSellSheet }: R
         </div>
       </main>
       <Footer />
+
+      {policyModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="bg-white rounded-2xl shadow-xl max-w-xl w-full p-6 space-y-4">
+            <div className="flex justify-between items-start">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">Privacy & Terms (summary)</h2>
+                <p className="text-sm text-gray-500 mt-1">Key points summarized; open the full pages for details.</p>
+              </div>
+              <button
+                type="button"
+                className="text-gray-500 hover:text-gray-800"
+                onClick={() => setPolicyModal(false)}
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="space-y-3 text-sm text-gray-700">
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">Privacy highlights</h3>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>We collect only what’s needed for your account, listings, and messaging.</li>
+                  <li>Your data isn’t sold to third parties; you can request deletion anytime.</li>
+                  <li>We apply reasonable security controls to protect your information.</li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1">Terms highlights</h3>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>No fraud, spam, or unsafe transactions.</li>
+                  <li>Verify buyers/sellers before sharing personal details.</li>
+                  <li>Accounts may be suspended for violations.</li>
+                </ul>
+              </div>
+              <div className="flex gap-3 pt-2">
+                <Link
+                  href="/privacy"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-sm font-medium text-gray-900 hover:underline"
+                  onClick={() => setPolicyModal(false)}
+                >
+                  Open Privacy Policy
+                </Link>
+                <Link
+                  href="/terms"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-sm font-medium text-gray-900 hover:underline"
+                  onClick={() => setPolicyModal(false)}
+                >
+                  Open Terms of Service
+                </Link>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3">
+              <button
+                type="button"
+                className="text-sm text-gray-600 hover:text-gray-900"
+                onClick={() => setPolicyModal(false)}
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                className="ml-auto bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors"
+                onClick={() => {
+                  setAgree(true);
+                  setPolicyModal(false);
+                }}
+              >
+                I read both summaries
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

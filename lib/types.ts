@@ -16,6 +16,7 @@ export interface User {
   verified: boolean; // Admin-verified badge
   following: string[]; // Array of user IDs that this user follows
   createdAt: string;
+  lastSeen?: string;
   bio?: string;
   avatar?: string;
   backgroundPicture?: string;

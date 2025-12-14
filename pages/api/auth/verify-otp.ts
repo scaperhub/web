@@ -17,14 +17,15 @@ export default async function handler(
   }
 
   // Get the OTP
-  const otp = await db.otps.getByEmail(email);
+  const normalizedEmail = email.toLowerCase();
+  const otp = await db.otps.getByEmail(normalizedEmail);
   if (!otp) {
     return res.status(400).json({ error: 'No OTP found for this email. Please request a new one.' });
   }
 
   // Check if OTP is expired
   if (new Date(otp.expiresAt) < new Date()) {
-    await db.otps.delete(email);
+    await db.otps.delete(normalizedEmail);
     return res.status(400).json({ error: 'OTP has expired. Please request a new one.' });
   }
 
@@ -34,7 +35,7 @@ export default async function handler(
   }
 
   // Get user
-  const user = await db.users.getByEmail(email);
+  const user = await db.users.getByEmail(normalizedEmail);
   if (!user) {
     return res.status(404).json({ error: 'User not found' });
   }
@@ -43,7 +44,7 @@ export default async function handler(
   await db.users.update(user.id, { emailVerified: true });
 
   // Delete OTP after successful verification
-  await db.otps.delete(email);
+  await db.otps.delete(normalizedEmail);
 
   // Note: User still needs admin approval to login
   const { password: _, ...userWithoutPassword } = user;

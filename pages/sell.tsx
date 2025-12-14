@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import { Category, User } from '@/lib/types';
 
 interface SellProps {
@@ -89,9 +90,9 @@ export default function Sell({ user, onLogout }: SellProps) {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white flex flex-col">
       <Navbar user={user} onLogout={onLogout} />
-      <main className="max-w-3xl mx-auto px-6 py-16">
+      <main className="flex-1 max-w-3xl mx-auto px-6 py-16 w-full">
         <div className="mb-10">
           <h1 className="text-3xl font-semibold text-gray-900 mb-2">List an Item</h1>
           <p className="text-sm text-gray-500">Create a new listing for your aquarium equipment</p>
@@ -248,13 +249,14 @@ export default function Sell({ user, onLogout }: SellProps) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gray-900 text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 disabled:opacity-50 transition-colors"
+              className="w-full bg-primary-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
             >
               {loading ? 'Creating...' : 'List Item'}
             </button>
           </form>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

@@ -463,7 +463,7 @@ export default function EditItemSheet({ user, item, isOpen, onClose, onSuccess }
                 <button
                   type="submit"
                   disabled={loading || formData.images.length === 0}
-                  className="flex-1 bg-gray-900 text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 disabled:opacity-50 transition-colors"
+                  className="flex-1 bg-primary-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
                 >
                   {loading ? 'Updating...' : 'Update Item'}
                 </button>

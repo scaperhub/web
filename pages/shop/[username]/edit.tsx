@@ -282,7 +282,7 @@ export default function ShopProfileEdit({ user, onLogout, onOpenSellSheet, onLog
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 bg-gray-900 text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 transition-colors"
+                className="flex-1 bg-primary-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-700 disabled:opacity-50 transition-colors"
               >
                 {saving ? 'Saving...' : 'Save Changes'}
               </button>

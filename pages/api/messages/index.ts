@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getCurrentUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { generateId } from '@/lib/utils';
+import { broadcastToUsers } from '@/lib/realtime';
 import { Message, Conversation } from '@/lib/types';
 
 export default async function handler(
@@ -25,7 +26,11 @@ export default async function handler(
 
     // Get all conversations for user
     const conversations = await db.conversations.getByUser(user.id);
-    return res.status(200).json({ conversations });
+    const allMessages = await db.messages.getAll();
+    const unreadCount = allMessages.filter(
+      (m: any) => m.receiverId === user.id && !m.read
+    ).length;
+    return res.status(200).json({ conversations, unreadCount });
   }
 
   if (req.method === 'POST') {
@@ -81,6 +86,17 @@ export default async function handler(
       lastMessageAt: new Date().toISOString(),
     });
 
+    // Broadcast to both participants
+    broadcastToUsers(
+      [conversation.buyerId, conversation.sellerId],
+      {
+        type: 'message:new',
+        conversationId: conversation.id,
+        itemId: itemId,
+        message,
+      }
+    );
+
     return res.status(201).json({ message, conversation });
   }
 
@@ -89,6 +105,17 @@ export default async function handler(
     
     if (markAsRead && conversationId) {
       await db.messages.markAsRead(conversationId, user.id);
+      // Notify the other participant that messages were read
+      const conversation = await db.conversations.getById(conversationId);
+      if (conversation) {
+        const targetUserId = conversation.buyerId === user.id ? conversation.sellerId : conversation.buyerId;
+        broadcastToUsers([targetUserId], {
+          type: 'message:read',
+          conversationId,
+          readerId: user.id,
+          readAt: new Date().toISOString(),
+        });
+      }
       return res.status(200).json({ success: true });
     }
   }
