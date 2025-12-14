@@ -23,7 +23,8 @@ function writeJson<T>(p: string, data: T[]) {
 function createDb(): any {
   // Only load Supabase DB when configured; on failure, throw (no JSON fallback in prod)
   if (USE_SUPABASE) {
-    const { db: supabaseDb } = require('./db-supabase');
+    const supabaseModule = require('./db-supabase');
+    const supabaseDb = supabaseModule.db || supabaseModule.default?.db || supabaseModule.default || supabaseModule;
     if (!supabaseDb || !supabaseDb.items) {
       throw new Error('Supabase db failed to initialize (missing items collection). Check Supabase env vars.');
     }
