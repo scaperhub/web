@@ -1,11 +1,18 @@
 // Hybrid DB: Supabase in production/server, JSON files for local dev.
 import fs from 'fs';
 import path from 'path';
+import supabaseModule from './db-supabase';
 import { User, Category, Item, Message, Conversation, OTP } from './types';
 
 const isProdLike = process.env.VERCEL === '1' || process.env.NODE_ENV === 'production';
 const isSupabaseForced = process.env.USE_SUPABASE === 'true';
 const preferJsonLocal = !isProdLike && process.env.USE_SUPABASE !== 'true';
+
+const supabaseDbResolved =
+  (supabaseModule as any)?.db ||
+  (supabaseModule as any)?.default?.db ||
+  (supabaseModule as any)?.default ||
+  supabaseModule;
 
 function readJson<T>(p: string): T[] {
   if (!fs.existsSync(p)) return [];
@@ -30,26 +37,19 @@ function loadSupabaseDb(): any {
     );
   }
 
-  const supabaseExport = require('./db-supabase');
-
-  const supabaseDb =
-    (supabaseExport as any)?.db ||
-    (supabaseExport as any)?.default?.db ||
-    (supabaseExport as any)?.default ||
-    supabaseExport;
-
-  if (!supabaseDb) {
+  if (!supabaseDbResolved || !(supabaseDbResolved as any).items) {
     const envInfo = {
       hasUrl,
       hasAnon,
       hasService: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+      supabaseKeys: Object.keys(supabaseModule || {}),
     };
     throw new Error(
-      `Supabase db failed to initialize (no export found). Env: ${JSON.stringify(envInfo)}`
+      `Supabase db failed to initialize (missing items collection). Env: ${JSON.stringify(envInfo)}`
     );
   }
 
-  return supabaseDb;
+  return supabaseDbResolved;
 }
 
 function createJsonDb(): any {
