@@ -26,7 +26,16 @@ function createDb(): any {
     const supabaseModule = require('./db-supabase');
     const supabaseDb = supabaseModule.db || supabaseModule.default?.db || supabaseModule.default || supabaseModule;
     if (!supabaseDb || !supabaseDb.items) {
-      throw new Error('Supabase db failed to initialize (missing items collection). Check Supabase env vars.');
+      const keys = Object.keys(supabaseModule || {});
+      const envInfo = {
+        USE_SUPABASE,
+        hasUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+        hasAnon: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+        hasService: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+      };
+      throw new Error(
+        `Supabase db failed to initialize (missing items collection). Module keys: ${keys.join(',')}. Env: ${JSON.stringify(envInfo)}`
+      );
     }
     return supabaseDb;
   }
