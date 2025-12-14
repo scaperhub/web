@@ -23,21 +23,32 @@ function writeJson<T>(p: string, data: T[]) {
 function createDb(): any {
   // Only load Supabase DB when configured; on failure, throw (no JSON fallback in prod)
   if (USE_SUPABASE) {
-    const supabaseModule = require('./db-supabase');
-    const supabaseDb = supabaseModule.db || supabaseModule.default?.db || supabaseModule.default || supabaseModule;
-    if (!supabaseDb || !supabaseDb.items) {
-      const keys = Object.keys(supabaseModule || {});
+    try {
+      const supabaseModule = require('./db-supabase');
+      const supabaseDb = supabaseModule.db || supabaseModule.default?.db || supabaseModule.default || supabaseModule;
+      if (!supabaseDb || !supabaseDb.items) {
+        const keys = Object.keys(supabaseModule || {});
+        const envInfo = {
+          USE_SUPABASE,
+          hasUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+          hasAnon: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+          hasService: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+        };
+        throw new Error(
+          `Supabase db failed to initialize (missing items collection). Module keys: ${keys.join(',')}. Env: ${JSON.stringify(envInfo)}`
+        );
+      }
+      return supabaseDb;
+    } catch (err: any) {
       const envInfo = {
         USE_SUPABASE,
         hasUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
         hasAnon: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
         hasService: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
       };
-      throw new Error(
-        `Supabase db failed to initialize (missing items collection). Module keys: ${keys.join(',')}. Env: ${JSON.stringify(envInfo)}`
-      );
+      console.error('Supabase initialization error:', err?.message || err, 'Env:', envInfo);
+      throw err;
     }
-    return supabaseDb;
   }
 
   const dataDir = path.join(process.cwd(), 'data');
